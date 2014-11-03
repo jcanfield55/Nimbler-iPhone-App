@@ -174,15 +174,31 @@
                         <action selector="submitFeedBack:" destination="-1" eventType="touchUpInside" id="397"/>
                     </connections>
                 </button>
-                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="401" userLabel="View - sent Feedback">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="401" userLabel="View - sent Feedback">
+                    <rect key="frame" x="0.0" y="0.0" width="285" height="480"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="sentFeedBack.png" translatesAutoresizingMaskIntoConstraints="NO" id="404">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="SentFeedbackBackground.png" translatesAutoresizingMaskIntoConstraints="NO" id="404">
+                            <rect key="frame" x="0.0" y="0.0" width="285" height="480"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="SentFeedbackIcon.png" translatesAutoresizingMaskIntoConstraints="NO" id="0dS-cQ-b9E">
+                            <rect key="frame" x="95" y="180" width="109" height="112"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="112" id="YtG-ND-hZt"/>
+                                <constraint firstAttribute="width" constant="109" id="xUr-NZ-Fxl"/>
+                            </constraints>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="centerY" secondItem="0dS-cQ-b9E" secondAttribute="centerY" id="MTL-xi-hXH"/>
+                        <constraint firstAttribute="bottom" secondItem="404" secondAttribute="bottom" id="Mw7-OZ-bTS"/>
+                        <constraint firstItem="404" firstAttribute="leading" secondItem="401" secondAttribute="leading" id="h9V-r6-bU7"/>
+                        <constraint firstAttribute="centerX" secondItem="0dS-cQ-b9E" secondAttribute="centerX" id="hHn-kV-b8J"/>
+                        <constraint firstAttribute="trailing" secondItem="404" secondAttribute="trailing" id="lC2-P8-w0c"/>
+                        <constraint firstItem="404" firstAttribute="top" secondItem="401" secondAttribute="top" id="pez-ol-Sb8"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" red="0.50196078430000002" green="0.50196078430000002" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -191,12 +207,15 @@
                 <constraint firstAttribute="trailing" secondItem="t4D-Jf-wem" secondAttribute="trailing" constant="43" id="81W-5X-zZo"/>
                 <constraint firstAttribute="trailing" secondItem="98" secondAttribute="trailing" id="9bn-5H-HVc"/>
                 <constraint firstItem="t4D-Jf-wem" firstAttribute="top" secondItem="368" secondAttribute="bottom" constant="8" id="Akr-uv-ddL"/>
+                <constraint firstItem="401" firstAttribute="leading" secondItem="97" secondAttribute="leading" id="Dgo-4A-F0g"/>
+                <constraint firstAttribute="trailing" secondItem="401" secondAttribute="trailing" constant="35" id="DwY-jE-59a"/>
                 <constraint firstItem="379" firstAttribute="top" secondItem="t4D-Jf-wem" secondAttribute="bottom" id="FHT-rD-o0E"/>
                 <constraint firstAttribute="trailing" secondItem="381" secondAttribute="trailing" constant="43" id="GCu-Ca-vuH"/>
                 <constraint firstItem="368" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="GGc-fg-rEz"/>
                 <constraint firstItem="98" firstAttribute="leading" secondItem="97" secondAttribute="leading" id="HIi-JW-zr4"/>
                 <constraint firstAttribute="bottom" secondItem="98" secondAttribute="bottom" id="Hil-PF-So6"/>
                 <constraint firstItem="380" firstAttribute="top" secondItem="379" secondAttribute="bottom" constant="8" id="TQz-k1-ZhO"/>
+                <constraint firstAttribute="bottom" secondItem="401" secondAttribute="bottom" id="Yf3-bi-UY7"/>
                 <constraint firstItem="379" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="cD9-sO-Qfd"/>
                 <constraint firstItem="98" firstAttribute="top" secondItem="97" secondAttribute="top" id="io2-v2-SKT"/>
                 <constraint firstItem="368" firstAttribute="top" secondItem="97" secondAttribute="top" constant="74" id="lgR-pX-Mpd"/>
@@ -204,6 +223,7 @@
                 <constraint firstItem="98" firstAttribute="height" secondItem="379" secondAttribute="height" multiplier="4.8" id="oOo-S2-lOQ"/>
                 <constraint firstAttribute="trailing" secondItem="368" secondAttribute="trailing" constant="43" id="r3y-vI-wq9"/>
                 <constraint firstAttribute="trailing" secondItem="380" secondAttribute="trailing" constant="43" id="wPS-ZD-g3z"/>
+                <constraint firstItem="401" firstAttribute="top" secondItem="97" secondAttribute="top" id="wae-CY-wXx"/>
                 <constraint firstItem="t4D-Jf-wem" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="x2m-vr-iKW"/>
                 <constraint firstItem="380" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="xBH-pk-bOS"/>
                 <constraint firstItem="381" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="zVa-7d-dE2"/>
@@ -213,9 +233,10 @@
         </view>
     </objects>
     <resources>
+        <image name="SentFeedbackBackground.png" width="317" height="548"/>
+        <image name="SentFeedbackIcon.png" width="109" height="112"/>
         <image name="email.png" width="25" height="25"/>
         <image name="message.png" width="25" height="25"/>
-        <image name="sentFeedBack.png" width="320" height="568"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

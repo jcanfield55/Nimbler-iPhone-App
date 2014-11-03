@@ -17,7 +17,6 @@
 
 #define RECORD_MSG @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
-#define FB_TITLE @"Feedback"
 
 #define RECORDING @"Recording...."
 #define RECORDING_STOP @"Recording Stopped...."
@@ -52,12 +51,13 @@
 @implementation FeedBackForm
 
 BOOL isCancelFB = FALSE;
-@synthesize tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
+@synthesize tpURLResource,alertView,mesg,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
 @synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
 @synthesize sentMessageView;
 @synthesize navBar,cancelButton;
 @synthesize isViewPresented;
+@synthesize lblNavigationTitle;
 
 NSUserDefaults *prefs;
 
@@ -65,7 +65,6 @@ NSUserDefaults *prefs;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        //[[self navigationItem] setTitle:FB_TITLE];
         prefs = [NSUserDefaults standardUserDefaults];
     }
     return self;
@@ -123,7 +122,7 @@ NSUserDefaults *prefs;
     else {
         [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
-    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.text=FEED_BACK_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
@@ -153,19 +152,11 @@ NSUserDefaults *prefs;
     [super viewDidUnload];
     self.txtFeedBack = nil;
     self.txtEmailId = nil;
-    self.btnPlayRecording = nil;
-    self.btnStopRecording = nil;
-    self.btnPauseRecording = nil;
-    self.btnRecordRecording = nil;
 }
 
 - (void)dealloc{
     self.txtFeedBack = nil;
     self.txtEmailId = nil;
-    self.btnPlayRecording = nil;
-    self.btnStopRecording = nil;
-    self.btnPauseRecording = nil;
-    self.btnRecordRecording = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -179,27 +170,31 @@ NSUserDefaults *prefs;
     }
     logEvent(FLURRY_FEEDBACK_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     [nc_AppDelegate sharedInstance].isFeedBackView = YES;
+    
+    [lblNavigationTitle setCenter:navBar.center];
 
     btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
+    btnAppFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
+
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
     labelCurrentActivityStatus.text = NULL_STRING;
     txtFeedBack.layer.cornerRadius = CORNER_RADIUS_SMALL;
-    
+
+    /*
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
+     */
     soundFilePath = nil;
     
     if(isViewPresented){
         UIButton *btnCancel = [UIButton buttonWithType:UIButtonTypeCustom];
         [btnCancel setBackgroundImage:[UIImage imageNamed:@"img_cancel.png"] forState:UIControlStateNormal];
-        [btnCancel setFrame:CGRectMake(250, 7, 62, 30)];
+        [btnCancel setFrame:CGRectMake(self.view.frame.size.width - 62 - FEEDBACK_POPUP_CANCEL_RIGHT_MARGIN,
+                                       7, 62, 30)];
         [btnCancel addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [navBar addSubview:btnCancel];
-        if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
-            [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y+20, navBar.frame.size.width,navBar.frame.size.height)];
-        }
     }
 }
 
@@ -690,7 +685,7 @@ NSUserDefaults *prefs;
         }
         isCancelFB = TRUE;
     } else if ([btnName isEqualToString:BUTTON_DONE]) {
-        [self.btnPlayRecording setEnabled:TRUE];
+        // [self.btnPlayRecording setEnabled:TRUE];
     }
 }
 

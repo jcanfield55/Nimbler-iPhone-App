@@ -94,7 +94,6 @@
 #define MAP_LINE_WIDTH 5   // Line width for maps
 
 // SettingInfoViewController
-
 #define DETAIL_SETTING_MAIN_LABEL_XPOS        10
 #define DETAIL_SETTING_MAIN_LABEL_YPOS        5
 #define DETAIL_SETTING_MAIN_LABEL_WIDTH       250
@@ -146,7 +145,8 @@
 #define SETTING_SUB_LABEL_WIDTH       50
 #define SETTING_SUB_LABEL_HEIGHT      20
 
-
+// Feedback
+#define FEEDBACK_POPUP_CANCEL_RIGHT_MARGIN 8
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT 40
@@ -193,7 +193,6 @@
 #define ANIMATION_STANDART_MOTION_SPEED 0.3
 
 // Images
-
 #define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"navBar.png"]
 
 #define NAVIGATION_ITEM1_XPOS 0

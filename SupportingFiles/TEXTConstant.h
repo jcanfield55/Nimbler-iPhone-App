@@ -33,7 +33,6 @@
 #define TRIP_PLANNER_VIEW @"Trip Planner"
 #define ADVISORIES_VIEW @"Advisories"
 #define SETTING_VIEW @"Settings"
-#define FEEDBACK_VIEW @"Feedback"
 
 // Default PlaceHolder ToFrom Text
 #define Placeholder_Text                  @"Search for location"

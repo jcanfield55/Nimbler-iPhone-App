@@ -1422,7 +1422,7 @@ FeedBackForm *fbView;
         FeedBackForm *feedBackForm;
         feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
         feedBackForm.isViewPresented = true;
-        [self.toFromViewController presentModalViewController:feedBackForm animated:YES];
+        [self.toFromViewController presentViewController:feedBackForm animated:YES completion:nil];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }

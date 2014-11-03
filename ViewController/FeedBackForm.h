@@ -32,7 +32,8 @@
     IBOutlet UIButton * btnRecordRecording;
      */
     
-    IBOutlet UIButton * btnSubmitFeedback;
+    IBOutlet UIButton *btnSubmitFeedback;
+    IBOutlet UIButton *btnAppFeedback;
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
     float secondElapsed;
@@ -59,7 +60,7 @@
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;
-@property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
+/* @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording; */
 @property (strong, nonatomic) IBOutlet UIView *buttonsBackgroundView;
 @property (strong, nonatomic) IBOutlet UIView *textViewBackground;
 @property (strong, nonatomic) IBOutlet UIView *textFieldBackground;
@@ -69,6 +70,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 @property (nonatomic) BOOL isViewPresented;
 
+@property (strong, nonatomic) UILabel *lblNavigationTitle;
 /*  These buttons were removed 10/27
 -(IBAction)startRecord:(id)sender;
 -(IBAction)stopRecord:(id)sender;

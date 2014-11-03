@@ -187,7 +187,7 @@ UIImage* imageDetailDisclosure;
     FeedBackForm *feedBackForm;
     feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
     feedBackForm.isViewPresented = true;
-    [self presentModalViewController:feedBackForm animated:YES];
+    [self presentViewController:feedBackForm animated:YES completion:nil];
 }
 
 @end
