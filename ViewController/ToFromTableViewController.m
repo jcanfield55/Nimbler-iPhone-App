@@ -211,13 +211,13 @@ NSString *strStreet2 = @"street ";
     BOOL isNextLocationFavorite = false;
     BOOL isPreviousLocationFavorite = false;
     
-    if((locationMoved.fromFrequencyFloat >= 100000 && locationMoved.toFrequencyFloat >= 100000)){
+    if((locationMoved.fromFrequencyFloat >= FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS && locationMoved.toFrequencyFloat >= FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)){
         isMovedLocationFavorite = true;
     }
-    if(previousLocation && (previousLocation.fromFrequencyFloat >= 100000 && previousLocation.toFrequencyFloat >= 100000)){
+    if(previousLocation && (previousLocation.fromFrequencyFloat >= FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS && previousLocation.toFrequencyFloat >= FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)){
         isPreviousLocationFavorite = true;
     }
-    if(nextLocation && (nextLocation.fromFrequencyFloat >= 100000 && nextLocation.toFrequencyFloat >= 100000)){
+    if(nextLocation && (nextLocation.fromFrequencyFloat >= FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS && nextLocation.toFrequencyFloat >= FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)){
         isNextLocationFavorite = true;
     }
     if(isPreviousLocationFavorite && isNextLocationFavorite){
@@ -453,6 +453,8 @@ NSString *strStreet2 = @"street ";
         [locations setSelectedToLocation:loc]; // Sort location to top of list next time
         [locations setTypedToString:@""];
     }
+    txtSearchView.text = @"";  // Clear the search field.  DE404 fix
+    [txtSearchView resignFirstResponder];  // DE404 fix part 2
     
     selectedLocation = loc;  // moved before updateToFromLocation as part of DE122 fix
     
@@ -551,14 +553,14 @@ NSString *strStreet2 = @"street ";
             
         }
         else if (loc == selectedLocation) {
-            if([[loc fromFrequency] doubleValue]>=100000.0){
+            if([[loc fromFrequency] doubleValue]>=FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS){
                 [btnFavorite setSelected:YES];
                 [btnFavorite setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
             }
             [cell setAccessoryView:btnFavorite];
         } else {
             // just bold for normal cell
-            if([[loc fromFrequency] doubleValue]>=100000.0){
+            if([[loc fromFrequency] doubleValue]>=FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS){
                 [btnFavorite setSelected:YES];
                 [btnFavorite setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
             }
@@ -675,11 +677,16 @@ NSString *strStreet2 = @"street ";
     [myTableView reloadData];
 }
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    if([text isEqualToString:@"\n"]){
+    if (textView == txtSearchView) {
+        return YES;
+    }
+    if([text isEqualToString:@"\n"]){  // DE374 fix
         int row = [textView tag] - 10000;
-        [self renameAddress:textView Row:row];
-        currentRowIndex = 0;
-        [myTableView setEditing:YES animated:NO];
+        if (row > 0 && row < [self.myTableView numberOfRowsInSection:0]) {
+            [self renameAddress:textView Row:row];
+            currentRowIndex = 0;
+            [myTableView setEditing:YES animated:NO];
+        }
     }
     return YES;
 }
@@ -712,14 +719,14 @@ NSString *strStreet2 = @"street ";
     if(favoriteButton.selected==YES){
         [favoriteButton setSelected:NO];
         [favoriteButton setImage:[UIImage imageNamed:@"img_inActiveStar.png"] forState:UIControlStateNormal];
-        [loc setFromFrequencyFloat:([loc fromFrequencyFloat]-100000)];
-        [loc setToFrequencyFloat:([loc toFrequencyFloat]-100000)];
+        [loc setFromFrequencyFloat:([loc fromFrequencyFloat]-FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)];
+        [loc setToFrequencyFloat:([loc toFrequencyFloat]-FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)];
     }
     else{
         [favoriteButton setSelected:YES];
         [favoriteButton setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
-        [loc setFromFrequencyFloat:([loc fromFrequencyFloat]+ 100000)];
-        [loc setToFrequencyFloat:([loc toFrequencyFloat]+100000)];
+        [loc setFromFrequencyFloat:([loc fromFrequencyFloat]+ FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)];
+        [loc setToFrequencyFloat:([loc toFrequencyFloat]+FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS)];
     }
     saveContext(managedObjectContext);
     NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"

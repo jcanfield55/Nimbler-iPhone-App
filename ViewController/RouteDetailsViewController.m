@@ -36,6 +36,7 @@
     UIBarButtonItem *forwardButton;
     UIBarButtonItem *backButton;
     NSArray* bbiArray;
+    int routeDetailsTableCellWidth;  // DE408 fix.  Make this variable a instance variable (rather than local to a method) and use the value from the heightForRowAtIndex method when within the cellForRowAtIndex method.  Previously the first cells would not have the full width of the table.  
     
     NSMutableDictionary *imageDictionary; // Dictionary to hold pre-loaded table images
 }
@@ -48,7 +49,6 @@
 @synthesize legMapVC;
 @synthesize mapView;
 @synthesize itineraryNumber;
-@synthesize mainTableTotalHeight;
 @synthesize btnBackItem,btnForwardItem,btnGoToItinerary;
 @synthesize timer;
 @synthesize count;
@@ -253,12 +253,6 @@ NSUserDefaults *prefs;
             NSLog(@"mainTableHeight=%f",mainTable.frame.size.height);
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,mainTable.frame.size.width,mainTable.frame.size.height)];
         }
-        // Compute the mainTableTotalHeight by calling the height of each row
-        mainTableTotalHeight = 0.0;
-        for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
-            mainTableTotalHeight += [self tableView:mainTable
-                            heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        }
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->setItinerary", @"", exception);
@@ -370,7 +364,8 @@ NSUserDefaults *prefs;
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     @try {
-        if (!cell) {
+        int mostRecentCellWidth = cell.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
+        if (!cell || mostRecentCellWidth != routeDetailsTableCellWidth) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                           reuseIdentifier:@"UIRouteDetailsViewCell"];
             [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
@@ -414,8 +409,11 @@ NSUserDefaults *prefs;
         }
         
         // if this is the selected row, make red
-        int routeDetailsTableCellWidth = cell.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
         
+        if (routeDetailsTableCellWidth <= 0) { // should not happen
+            routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
+        }
+        NIMLOG_AUTOSIZE(@"Cell Row #%d: Width = %d", [indexPath row], routeDetailsTableCellWidth);
         NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
         NSInteger attributedLblYPOS = 0;
@@ -486,7 +484,7 @@ NSUserDefaults *prefs;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
-        int routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
+        routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
@@ -496,6 +494,7 @@ NSUserDefaults *prefs;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
+        NIMLOG_AUTOSIZE(@"row #%d: width = %d, height = %f, titleText = '%@', subtitleText = '%@'", [indexPath row], routeDetailsTableCellWidth, height, titleText, subtitleText);
         return height;
     }
     @catch (NSException *exception) {

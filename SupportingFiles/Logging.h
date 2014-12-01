@@ -26,4 +26,5 @@
 #define NIMLOG_US191(...)   // NSLog(__VA_ARGS__) // Logging for US191 (show intermediate stops)
 #define NIMLOG_AUTOTEST(...) // NSLog(__VA_ARGS__) // Logging in automated tests
 #define NIMLOG_UBER(...) NSLog(__VA_ARGS__) // Logging for Uber additions
+#define NIMLOG_AUTOSIZE(...) NSLog(__VA_ARGS__) // Logging for auto-size changes for iPhone 6
 #endif

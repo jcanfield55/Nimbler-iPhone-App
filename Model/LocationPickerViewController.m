@@ -211,13 +211,7 @@
             }
         }
         
-        // return to the appropriate edit mode so users can continue editing
-        if (isFrom) {
-            [[toFromTableVC toFromVC].txtFromView becomeFirstResponder];
-        }
-        else {
-            [[toFromTableVC toFromVC].txtToView becomeFirstResponder];
-        }
+        // DE405 fix -- deleted code below for becoming first responder
     }
 }
 

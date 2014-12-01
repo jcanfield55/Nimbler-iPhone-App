@@ -251,6 +251,9 @@
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 #define LOCATIONS_THRESHOLD_TO_SEARCH_USING_COREDATA 500
 
+// ToFromTableViewController behavior
+#define FREQUENCY_BOOST_FOR_FAVORITE_LOCATIONS 100000
+
 // Plan, PlanStore, and Plan caching behavior
 #define PLAN_MAX_ITINERARIES_TO_SHOW (30) /* Show at most 20 results */
 #define PLAN_BUFFER_SECONDS_BEFORE_ITINERARY (3*60+1) /* Take cached itineraries up to 3 minutes before the requestDate */

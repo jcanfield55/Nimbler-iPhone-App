@@ -858,6 +858,13 @@ UIImage *imageDetailDisclosure;
         int btnHeight = EXCLUDE_BUTTON_HEIGHT;
         int width = EXCLUDE_BUTTON_WIDTH;
         
+        // Remove previous buttonViews from previous routes, DE407 fix
+        for (UIView *subview in [modeBtnView subviews]) {
+            if ([subview isKindOfClass:[UIButton class]]) {
+                [subview removeFromSuperview];
+            }
+        }
+        
         // Update the height constraint for modeBtnView if needed
         for (NSLayoutConstraint *constraint in [modeBtnView constraints]) {
             if (constraint.firstAttribute == NSLayoutAttributeHeight) {
