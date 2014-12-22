@@ -13,11 +13,33 @@
 // App specific constants
 //#define APP_TITLE                      @"Nimbler SF"
 
-// Feedback responses
+// Feedback Page text
 #define FB_TYPE_MESSAGE_PLACEHOLDER @"Type message to Nimbler"  // Note: make sure this is the same placeholder text entered into the FeedBackForm.xib file
 #define FB_RESPONSE_SUCCEES @"Feedback Sent Successfully"
 #define FB_RESPONSE_FAIL @"Feedback Send Fail"
 #define FB_TITLE_MSG @"Nimbler Feedback"
+
+#define RECORD_MSG @"Recording your feedback \nSpeak ..."
+#define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
+
+#define RECORDING @"Recording...."
+#define RECORDING_STOP @"Recording Stopped...."
+#define RECORDING_CANCEL @"Recording Canceled...."
+#define RECORDING_PAUSE @"Recording Paused...."
+#define RECORDING_PLAY @"Record Playing...."
+#define VOICE_FB_FILE @"voiceFeedback.caf"
+#define PLAY_TIME @"Play Time : %02d"
+#define TIME_LEFT @"Time Left : %02d"
+#define REC_NOT_PLAY @"Error while playing recording...."
+#define PLAY_COMPLETE @"Play complete...."
+#define ANIMATION_PARAM @"anim"
+#define FB_CONFIRMATION @"Are you sure you want to send feedback?"
+#define FB_WHEN_NO_VOICE_OR_TEXT @"Please provide your text or voice feedback, then press Send"
+#define ALERT_TRIP @"Trip Planner"
+
+#define BUTTON_DONE @"Done"
+#define BUTTON_CANCEL @"Cancel"
+#define BUTTON_OK @"OK"
 
 // Itinerary / Route Details strings
 #define ROUTE_STARTPOINT_PREFIX @"Start at "

@@ -14,28 +14,7 @@
 #import "twitterViewController.h"
 #import "UtilityFunctions.h"
 #import "NimblerApplication.h"
-
-#define RECORD_MSG @"Recording your feedback \nSpeak ..."
-#define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
-
-#define RECORDING @"Recording...."
-#define RECORDING_STOP @"Recording Stopped...."
-#define RECORDING_CANCEL @"Recording Canceled...."
-#define RECORDING_PAUSE @"Recording Paused...."
-#define RECORDING_PLAY @"Record Playing...."
-#define VOICE_FB_FILE @"voiceFeedback.caf"
-#define PLAY_TIME @"Play Time : %02d"
-#define TIME_LEFT @"Time Left : %02d"
-#define REC_NOT_PLAY @"Error while playing recording...."
-#define PLAY_COMPLETE @"Play complete...."
-#define ANIMATION_PARAM @"anim"
-#define FB_CONFIRMATION @"Are you sure you want to send feedback?"
-#define FB_WHEN_NO_VOICE_OR_TEXT @"Please provide your text or voice feedback, then press Send"
-#define ALERT_TRIP @"Trip Planner"
-
-#define BUTTON_DONE @"Done"
-#define BUTTON_CANCEL @"Cancel"
-#define BUTTON_OK @"OK"
+#import "TEXTConstant.h"
 
 #define BORDER_WIDTH 1.0
 #define RECORD_DURATION 60
@@ -55,7 +34,7 @@ BOOL isCancelFB = FALSE;
 @synthesize txtEmailId,txtFeedBack;
 @synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
 @synthesize sentMessageView;
-@synthesize navBar,cancelButton;
+@synthesize cancelButton;
 @synthesize isViewPresented;
 @synthesize lblNavigationTitle;
 
@@ -129,8 +108,8 @@ NSUserDefaults *prefs;
     [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
-    [lblNavigationTitle setCenter:navBar.center];
-    [navBar addSubview:lblNavigationTitle];
+    // [lblNavigationTitle setCenter:navBar.center];
+    // [navBar addSubview:lblNavigationTitle];
     
     [buttonsBackgroundView.layer setCornerRadius:5.0];
     [textViewBackground.layer setCornerRadius:5.0];
@@ -139,13 +118,14 @@ NSUserDefaults *prefs;
     [txtFeedBack setReturnKeyType:UIReturnKeyNext];
     [txtEmailId setReturnKeyType:UIReturnKeyDone];
     
+    /* Take away navBar and put into .xib instead
     if([navBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [navBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
         [navBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
-
+     */
 }
 
 - (void)viewDidUnload{
@@ -171,7 +151,7 @@ NSUserDefaults *prefs;
     logEvent(FLURRY_FEEDBACK_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     [nc_AppDelegate sharedInstance].isFeedBackView = YES;
     
-    [lblNavigationTitle setCenter:navBar.center];
+    // [lblNavigationTitle setCenter:navBar.center];
 
     btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
     btnAppFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
@@ -189,12 +169,14 @@ NSUserDefaults *prefs;
     soundFilePath = nil;
     
     if(isViewPresented){
+        /* Take out navBar logic -- put into .xib instead
         UIButton *btnCancel = [UIButton buttonWithType:UIButtonTypeCustom];
         [btnCancel setBackgroundImage:[UIImage imageNamed:@"img_cancel.png"] forState:UIControlStateNormal];
         [btnCancel setFrame:CGRectMake(self.view.frame.size.width - 62 - FEEDBACK_POPUP_CANCEL_RIGHT_MARGIN,
                                        7, 62, 30)];
         [btnCancel addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [navBar addSubview:btnCancel];
+         */
     }
 }
 
@@ -208,11 +190,13 @@ NSUserDefaults *prefs;
         [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,btnSubmitFeedback.frame.origin.y-20,btnSubmitFeedback.frame.size.width,btnSubmitFeedback.frame.size.height)];
     }
     
+    /* take out navBar logic -- put in .xib instead
     if(isViewPresented){
         if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
             [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y-20, navBar.frame.size.width,navBar.frame.size.height)];
         }
     }
+     */
 
     [nc_AppDelegate sharedInstance].isFeedBackView = NO;
 }
@@ -697,38 +681,24 @@ NSUserDefaults *prefs;
 }
 
 #pragma mark TextField animation at selected
--(void) animateTextField: (UITextField*) textField up: (BOOL) up
-{
-    int txtPosition = (textField.frame.origin.y - 160);
-    const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = UP_DOWN_RATIO; // tweak as needed
-    
-    int movement = (up ? -movementDistance : movementDistance);
-    
-    [UIView beginAnimations:ANIMATION_PARAM context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
-    [UIView commitAnimations];
-}
+
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
+    if ([UIScreen mainScreen].bounds.size.height > IPHONE5HEIGHT) {
+        return;  // If iPhone6 height or more, do not move screen up at all
+    }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+    if ([UIScreen mainScreen].bounds.size.height < IPHONE5HEIGHT) { // If iPhone4 height, move screen up a lot
+        [self.view setFrame:CGRectMake(self.view.frame.origin.x,-160, self.view.frame.size.width, self.view.frame.size.height)];
+    }    else if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){ // If iPhone5 height, move screen up a bit
        [self.view setFrame:CGRectMake(self.view.frame.origin.x,-90, self.view.frame.size.width, self.view.frame.size.height)];
     }
-    else{
-       [self.view setFrame:CGRectMake(self.view.frame.origin.x,-160, self.view.frame.size.width, self.view.frame.size.height)]; 
-    }
     [UIView commitAnimations];
-    
-    //[self animateTextField: textField up: YES];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    //[self animateTextField: textField up: NO];
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];

@@ -68,7 +68,7 @@
 
 @property (strong, nonatomic) IBOutlet UINavigationBar *navBar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
-@property (nonatomic) BOOL isViewPresented;
+@property (nonatomic) BOOL isViewPresented;  // True if this is a pop-up feedback view (FeedbackFormPopUp.xib); false otherwise
 
 @property (strong, nonatomic) UILabel *lblNavigationTitle;
 /*  These buttons were removed 10/27
@@ -89,7 +89,6 @@
 -(void)sendFeedbackToServer;
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
--(BOOL)isPhoneSilent;
 - (void) hideTabBar;
 
 @end

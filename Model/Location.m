@@ -165,7 +165,8 @@ static Locations *locations;
                 NSString* type;
                 while (type = [enumerator nextObject]) {  // enumerate thru all the type strings in the dictionary
                     NSString* name = [addrComponents objectForKey:type];
-                    if ([type isEqualToString:@"route"] ||
+                    if ([type isEqualToString:@"Name"] ||
+                        [type isEqualToString:@"route"] ||
                         [type isEqualToString:@"intersection"] ||
                         [type isEqualToString:@"locality"] ||
                         [type isEqualToString:@"airport"] ||
@@ -201,6 +202,11 @@ static Locations *locations;
                             }
                         }
                     }
+                }
+                if (self.nickName && [self.nickName length] > 0 &&
+                    [[self nickName] rangeOfString:atom options:NSCaseInsensitiveSearch].location == 0) {
+                    [matches replaceObjectAtIndex:i withObject:@"Match"];
+                    goto getNextAtom;
                 }
             }
         getNextAtom:

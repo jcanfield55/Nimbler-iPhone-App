@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -10,7 +10,6 @@
             <connections>
                 <outlet property="btnSubmitFeedback" destination="381" id="390"/>
                 <outlet property="buttonsBackgroundView" destination="368" id="398"/>
-                <outlet property="navBar" destination="E9g-0J-ZAm" id="B7W-SC-K2d"/>
                 <outlet property="textFieldBackground" destination="380" id="399"/>
                 <outlet property="textViewBackground" destination="379" id="400"/>
                 <outlet property="txtEmailId" destination="385" id="391"/>
@@ -26,10 +25,10 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                 </imageView>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="368" userLabel="View - Like Nimbler?">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="368" userLabel="View - Like Nimbler?">
                     <rect key="frame" x="10" y="66" width="267" height="94"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Like Nimbler?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="370">
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" ambiguous="YES" text="Like Nimbler?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="370">
                             <rect key="frame" x="10" y="5" width="201" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="e8C-6x-f2E"/>
@@ -39,7 +38,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Help spread the word" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KEP-NR-3TL">
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" ambiguous="YES" text="Help spread the word" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KEP-NR-3TL">
                             <rect key="frame" x="10" y="23" width="201" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="201" id="adM-QO-xok"/>
@@ -49,7 +48,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r3M-sb-g9e">
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r3M-sb-g9e">
                             <rect key="frame" x="10" y="48" width="280" height="35"/>
                             <color key="backgroundColor" red="0.9882352941176471" green="0.40392156862745099" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
@@ -77,10 +76,10 @@
                         <constraint firstItem="r3M-sb-g9e" firstAttribute="leading" secondItem="368" secondAttribute="leading" constant="10" id="ycU-4U-nKu"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t4D-Jf-wem" userLabel="View - See Improved?">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t4D-Jf-wem" userLabel="View - See Improved?">
                     <rect key="frame" x="10" y="166" width="267" height="34"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Something you'd like to see improved?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TBP-k9-dS0">
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" ambiguous="YES" text="Something you'd like to see improved?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TBP-k9-dS0">
                             <rect key="frame" x="10" y="5" width="257" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="257" id="NEZ-pQ-MiR"/>
@@ -98,17 +97,17 @@
                         <constraint firstItem="TBP-k9-dS0" firstAttribute="leading" secondItem="t4D-Jf-wem" secondAttribute="leading" constant="10" id="vng-Hw-Mvu"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="379" userLabel="View - Message text">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="379" userLabel="View - Message text">
                     <rect key="frame" x="10" y="200" width="267" height="100"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="message.png" translatesAutoresizingMaskIntoConstraints="NO" id="382">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" image="message.png" translatesAutoresizingMaskIntoConstraints="NO" id="382">
                             <rect key="frame" x="8" y="9" width="25" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="MFA-UH-TdR"/>
                                 <constraint firstAttribute="width" constant="25" id="b5c-vv-lr8"/>
                             </constraints>
                         </imageView>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Type message to Nimbler" translatesAutoresizingMaskIntoConstraints="NO" id="383">
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" text="Type message to Nimbler" translatesAutoresizingMaskIntoConstraints="NO" id="383">
                             <rect key="frame" x="33" y="0.0" width="226" height="97"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -126,17 +125,17 @@
                         <constraint firstItem="383" firstAttribute="leading" secondItem="382" secondAttribute="trailing" id="r8C-q5-f6H"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="380" userLabel="View - Email address">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="380" userLabel="View - Email address">
                     <rect key="frame" x="10" y="310" width="267" height="44"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="384">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="384">
                             <rect key="frame" x="10" y="13" width="25" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="25" id="hua-zb-2Bq"/>
                                 <constraint firstAttribute="height" constant="21" id="koB-80-cWS"/>
                             </constraints>
                         </imageView>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email For Response" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="385">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email For Response" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="385">
                             <rect key="frame" x="44" y="5" width="217" height="38"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="w6F-cx-gfj"/>
@@ -156,7 +155,7 @@
                         <constraint firstItem="385" firstAttribute="leading" secondItem="384" secondAttribute="trailing" constant="5" id="x9p-f4-eko"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="381">
+                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="381">
                     <rect key="frame" x="10" y="360" width="267" height="44"/>
                     <color key="backgroundColor" red="0.9882352941176471" green="0.40392156862745099" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
@@ -174,15 +173,6 @@
                         <action selector="submitFeedBack:" destination="-1" eventType="touchUpInside" id="397"/>
                     </connections>
                 </button>
-                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E9g-0J-ZAm">
-                    <rect key="frame" x="0.0" y="20" width="320" height="44"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="44" id="MMw-nU-5jX"/>
-                    </constraints>
-                    <items>
-                        <navigationItem id="huA-5V-WbJ"/>
-                    </items>
-                </navigationBar>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gq2-BV-gLa" userLabel="View - sent Feedback">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                     <subviews>
@@ -219,9 +209,7 @@
                 <constraint firstItem="379" firstAttribute="top" secondItem="t4D-Jf-wem" secondAttribute="bottom" id="FHT-rD-o0E"/>
                 <constraint firstAttribute="trailing" secondItem="381" secondAttribute="trailing" constant="10" id="GCu-Ca-vuH"/>
                 <constraint firstItem="368" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="GGc-fg-rEz"/>
-                <constraint firstItem="368" firstAttribute="top" secondItem="E9g-0J-ZAm" secondAttribute="bottom" constant="20" id="GWU-Qf-ekf"/>
                 <constraint firstItem="98" firstAttribute="leading" secondItem="97" secondAttribute="leading" id="HIi-JW-zr4"/>
-                <constraint firstAttribute="trailing" secondItem="E9g-0J-ZAm" secondAttribute="trailing" id="HQU-Zb-Gv7"/>
                 <constraint firstAttribute="bottom" secondItem="98" secondAttribute="bottom" id="Hil-PF-So6"/>
                 <constraint firstItem="380" firstAttribute="top" secondItem="379" secondAttribute="bottom" constant="8" id="TQz-k1-ZhO"/>
                 <constraint firstItem="379" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="cD9-sO-Qfd"/>
@@ -229,7 +217,6 @@
                 <constraint firstItem="98" firstAttribute="top" secondItem="97" secondAttribute="top" id="io2-v2-SKT"/>
                 <constraint firstItem="Gq2-BV-gLa" firstAttribute="top" secondItem="97" secondAttribute="top" id="jSn-hm-ID8"/>
                 <constraint firstItem="381" firstAttribute="top" secondItem="380" secondAttribute="bottom" constant="8" id="mrH-zB-MGb"/>
-                <constraint firstItem="E9g-0J-ZAm" firstAttribute="leading" secondItem="97" secondAttribute="leading" id="nua-MS-bqw"/>
                 <constraint firstItem="98" firstAttribute="height" secondItem="379" secondAttribute="height" multiplier="4.8" id="oOo-S2-lOQ"/>
                 <constraint firstItem="Gq2-BV-gLa" firstAttribute="leading" secondItem="97" secondAttribute="leading" id="pF7-mO-y8y"/>
                 <constraint firstAttribute="trailing" secondItem="368" secondAttribute="trailing" constant="10" id="r3y-vI-wq9"/>
@@ -237,7 +224,6 @@
                 <constraint firstAttribute="bottom" secondItem="Gq2-BV-gLa" secondAttribute="bottom" id="wqP-Fa-BFE"/>
                 <constraint firstItem="t4D-Jf-wem" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="x2m-vr-iKW"/>
                 <constraint firstItem="380" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="xBH-pk-bOS"/>
-                <constraint firstItem="E9g-0J-ZAm" firstAttribute="top" secondItem="97" secondAttribute="top" constant="20" id="z3O-oC-V2T"/>
                 <constraint firstItem="381" firstAttribute="leading" secondItem="97" secondAttribute="leading" constant="10" id="zVa-7d-dE2"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
