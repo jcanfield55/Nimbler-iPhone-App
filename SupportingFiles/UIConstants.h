@@ -12,8 +12,10 @@
 
 //Latest UI Constants
 
-// To & From table heights for regular (3.5") iPhone screen
+// UI Status Bar (top status bar) height
+#define UI_STATUS_BAR_HEIGHT  20
 
+// To & From table heights for regular (3.5") iPhone screen
 #define TOFROM_HEIGHT_LOCATION_EDIT_MODE 380 // HEIGHT WHEN ONLY TOFROM LOCATION EDIT MODE
 
 // To & From table heights for iPhone5 and other 4" screens
@@ -147,6 +149,9 @@
 
 // Feedback
 #define FEEDBACK_POPUP_CANCEL_RIGHT_MARGIN 8
+#define FB_BIG_SHIFT_UP_AMOUNT_FOR_KEYBOARD -160  // For iPhone4
+#define FB_MEDIUM_SHIFT_UP_AMOUNT_FOR_KEYBOARD -105 // For iPhone5 and iPhone4 e-mail address
+#define FB_SMALL_SHIFT_UP_AMOUNT_FOR_KEYBOARD -45  // For iPhone6
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT 40
@@ -206,7 +211,7 @@
 #define ROUTE_BUTTON_WIDTH_4INCH      72
 #define ROUTE_BUTTON_HEIGHT_4INCH     37
 
-// iPhone model screen sizes, for reference only
+// iPhone model screen sizes, 
 #define IPHONE4_WIDTH       320
 #define IPHONE4_HEIGHT      480
 #define IPHONE5_WIDTH       320

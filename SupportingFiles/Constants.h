@@ -398,7 +398,15 @@
 #define DATE_OF_USE                 @"dateOfUse"
 #define DAYS_COUNT                 @"daysCount"
 #define FEEDBACK_REMINDER_PENDING  @"feedbackReminderPending"
-#define DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER  10
+#define FEEDBACK_LIKES_DISLIKES     @"feedbackLikesDislikes"
+#define FEEDBACK_LIKES_VALUE        @"likes"
+#define FEEDBACK_DISLIKES_VALUE     @"dislikes"
+#define APP_VERSION                 @"appVersion"
+#define IS_UPGRADED_CUSTOMER           @"isUpgradedCustomer"
+
+#define DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER  7  // Updated 12/26/14 by JC
+#define DAYS_TO_SHOW_FEEDBACK_ALERT_UPGRADE_NUMBER  4  // For customer upgrading to a new version
+#define DAYS_TO_SHOW_FEEDBACK_ALERT_REMIND_ME_LATER_NUMBER  5
 
 // User Preferance
 #define DEVICE_TOKEN      @"deviceToken"

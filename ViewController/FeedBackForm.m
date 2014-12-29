@@ -31,12 +31,16 @@
 
 BOOL isCancelFB = FALSE;
 @synthesize tpURLResource,alertView,mesg,fbReqParams;
+@synthesize messagePlaceholder;
 @synthesize txtEmailId,txtFeedBack;
 @synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
 @synthesize sentMessageView;
 @synthesize cancelButton;
 @synthesize isViewPresented;
+@synthesize isDislikeFeedback;
 @synthesize lblNavigationTitle;
+@synthesize moveableItemsView;
+@synthesize movingHeightConstraint;
 
 NSUserDefaults *prefs;
 
@@ -85,6 +89,7 @@ NSUserDefaults *prefs;
     [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
     
+    messagePlaceholder = txtFeedBack.text;
     // Part Of DE-318 Fix
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
     singleTap.delegate = self;
@@ -142,12 +147,25 @@ NSUserDefaults *prefs;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    /* Should not be necessary with UI defined by constraints (JC 12/28/2014)
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        [buttonsBackgroundView setFrame:CGRectMake(buttonsBackgroundView.frame.origin.x,buttonsBackgroundView.frame.origin.y+20,buttonsBackgroundView.frame.size.width,buttonsBackgroundView.frame.size.height)];
-        [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,textFieldBackground.frame.origin.y+20,textFieldBackground.frame.size.width,textFieldBackground.frame.size.height)];
-        [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,textViewBackground.frame.origin.y+20,textViewBackground.frame.size.width,textViewBackground.frame.size.height)];
-        [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,btnSubmitFeedback.frame.origin.y+20,btnSubmitFeedback.frame.size.width,btnSubmitFeedback.frame.size.height)];
-    }
+        [buttonsBackgroundView setFrame:CGRectMake(buttonsBackgroundView.frame.origin.x,
+                                                   buttonsBackgroundView.frame.origin.y+UI_STATUS_BAR_HEIGHT,
+                                                   buttonsBackgroundView.frame.size.width,
+                                                   buttonsBackgroundView.frame.size.height)];
+        [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,
+                                                 textFieldBackground.frame.origin.y+UI_STATUS_BAR_HEIGHT,
+                                                 textFieldBackground.frame.size.width,
+                                                 textFieldBackground.frame.size.height)];
+        [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,
+                                                textViewBackground.frame.origin.y+UI_STATUS_BAR_HEIGHT,
+                                                textViewBackground.frame.size.width,
+                                                textViewBackground.frame.size.height)];
+        [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,
+                                               btnSubmitFeedback.frame.origin.y+UI_STATUS_BAR_HEIGHT,
+                                               btnSubmitFeedback.frame.size.width,
+                                               btnSubmitFeedback.frame.size.height)];
+    } */
     logEvent(FLURRY_FEEDBACK_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     [nc_AppDelegate sharedInstance].isFeedBackView = YES;
     
@@ -183,13 +201,26 @@ NSUserDefaults *prefs;
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    /* Should not be necessary with UI defined by constraints (JC 12/28/2014)
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        [buttonsBackgroundView setFrame:CGRectMake(buttonsBackgroundView.frame.origin.x,buttonsBackgroundView.frame.origin.y-20,buttonsBackgroundView.frame.size.width,buttonsBackgroundView.frame.size.height)];
-        [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,textFieldBackground.frame.origin.y-20,textFieldBackground.frame.size.width,textFieldBackground.frame.size.height)];
-        [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,textViewBackground.frame.origin.y-20,textViewBackground.frame.size.width,textViewBackground.frame.size.height)];
-        [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,btnSubmitFeedback.frame.origin.y-20,btnSubmitFeedback.frame.size.width,btnSubmitFeedback.frame.size.height)];
+        [buttonsBackgroundView setFrame:CGRectMake(buttonsBackgroundView.frame.origin.x,
+                                                   buttonsBackgroundView.frame.origin.y-UI_STATUS_BAR_HEIGHT,
+                                                   buttonsBackgroundView.frame.size.width,
+                                                   buttonsBackgroundView.frame.size.height)];
+        [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,
+                                                 textFieldBackground.frame.origin.y-UI_STATUS_BAR_HEIGHT,
+                                                 textFieldBackground.frame.size.width,
+                                                 textFieldBackground.frame.size.height)];
+        [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,
+                                                textViewBackground.frame.origin.y-UI_STATUS_BAR_HEIGHT,
+                                                textViewBackground.frame.size.width,
+                                                textViewBackground.frame.size.height)];
+        [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,
+                                               btnSubmitFeedback.frame.origin.y-UI_STATUS_BAR_HEIGHT,
+                                               btnSubmitFeedback.frame.size.width,
+                                               btnSubmitFeedback.frame.size.height)];
     }
-    
+    */
     /* take out navBar logic -- put in .xib instead
     if(isViewPresented){
         if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
@@ -462,7 +493,7 @@ NSUserDefaults *prefs;
     if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
         // Fixed DE-338
         // Removing the white space character from feedback text and then check the length
-        NSString *feedBackText = [txtFeedBack.text stringByReplacingOccurrencesOfString:FB_TYPE_MESSAGE_PLACEHOLDER withString:@""];
+        NSString *feedBackText = [txtFeedBack.text stringByReplacingOccurrencesOfString:messagePlaceholder withString:@""];
         if((soundFilePath == nil) && ([feedBackText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0)) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
             [alert show];
@@ -577,7 +608,7 @@ NSUserDefaults *prefs;
         attachment.fileName = FB_FILE_NAME;
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_AUDIO] forParam:FB_FILE_FORMAT_TYPE];
     }
-    if([txtFeedBack.text isEqualToString:FB_TYPE_MESSAGE_PLACEHOLDER]){
+    if([txtFeedBack.text isEqualToString:messagePlaceholder]){
         txtFeedBack.text = @"";
     }
     if (txtFeedBack.text != nil){
@@ -684,16 +715,26 @@ NSUserDefaults *prefs;
 
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    if ([UIScreen mainScreen].bounds.size.height > IPHONE5HEIGHT) {
-        return;  // If iPhone6 height or more, do not move screen up at all
+    if (isDislikeFeedback && [UIScreen mainScreen].bounds.size.height > IPHONE4_HEIGHT) {
+        return;  // No moving needed for dislikeFeedback pop-up unless iPhone4
+    }
+    if ([UIScreen mainScreen].bounds.size.height > IPHONE6_HEIGHT) {
+        return;
     }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    if ([UIScreen mainScreen].bounds.size.height < IPHONE5HEIGHT) { // If iPhone4 height, move screen up a lot
-        [self.view setFrame:CGRectMake(self.view.frame.origin.x,-160, self.view.frame.size.width, self.view.frame.size.height)];
-    }    else if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){ // If iPhone5 height, move screen up a bit
-       [self.view setFrame:CGRectMake(self.view.frame.origin.x,-90, self.view.frame.size.width, self.view.frame.size.height)];
+    if (isDislikeFeedback && [UIScreen mainScreen].bounds.size.height <= IPHONE4_HEIGHT) {
+        movingHeightConstraint.constant = FB_SMALL_SHIFT_UP_AMOUNT_FOR_KEYBOARD;  // DE411 fix
+    }
+    else if ([UIScreen mainScreen].bounds.size.height < IPHONE5HEIGHT) { // If iPhone4 height, move screen up a lot
+        movingHeightConstraint.constant = FB_BIG_SHIFT_UP_AMOUNT_FOR_KEYBOARD; // DE411 fix
+    }
+    else if([UIScreen mainScreen].bounds.size.height <= IPHONE5HEIGHT){ // If iPhone5 height, move screen up some
+        movingHeightConstraint.constant = FB_MEDIUM_SHIFT_UP_AMOUNT_FOR_KEYBOARD;  // DE411 fix
+    }
+    else if([UIScreen mainScreen].bounds.size.height <= IPHONE6_HEIGHT){ // If iPhone6 height, move screen up a bit{
+        movingHeightConstraint.constant = FB_SMALL_SHIFT_UP_AMOUNT_FOR_KEYBOARD;  // DE411 fix
     }
     [UIView commitAnimations];
 }
@@ -702,49 +743,44 @@ NSUserDefaults *prefs;
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    if(isViewPresented){
-      [self.view setFrame:CGRectMake(self.view.frame.origin.x,20, self.view.frame.size.width, self.view.frame.size.height)];
-    }
-    else{
-        [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
-    }
+    movingHeightConstraint.constant = 0;
     [UIView commitAnimations];
 }
 
 #pragma mark TextView animation at selected
-- (void) animateTextView: (UITextView*) textView up: (BOOL) up{
-    int txtPosition = (textView.frame.origin.y - 140);
-    const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = UP_DOWN_RATIO; // tweak as needed
-    int movement = (up ? -movementDistance : movementDistance);
-    [UIView beginAnimations:ANIMATION_PARAM context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
-    [UIView commitAnimations];
-}
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
-    if([textView.text isEqualToString:FB_TYPE_MESSAGE_PLACEHOLDER]){
+    if([textView.text isEqualToString:messagePlaceholder]){
         [textView setText:@""];
         [textView setTextColor:[UIColor darkGrayColor]];
+    }
+    if (isDislikeFeedback) {
+        return;  // No moving needed for dislikeFeedback pop-up
+    }
+    if ([UIScreen mainScreen].bounds.size.height > IPHONE6_HEIGHT) {
+        return;
     }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x,-90, self.view.frame.size.width, self.view.frame.size.height)];
+    if([UIScreen mainScreen].bounds.size.height <= IPHONE5HEIGHT){ // If iPhone5 height, move screen up some
+        movingHeightConstraint.constant = FB_MEDIUM_SHIFT_UP_AMOUNT_FOR_KEYBOARD;  // DE411 fix
+    }
+    else if([UIScreen mainScreen].bounds.size.height > IPHONE5HEIGHT){
+        movingHeightConstraint.constant = FB_SMALL_SHIFT_UP_AMOUNT_FOR_KEYBOARD;  // DE411 fix
+    }
     [UIView commitAnimations];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
     if([textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0){
-        [textView setText:FB_TYPE_MESSAGE_PLACEHOLDER];
+        [textView setText:messagePlaceholder];
         [textView setTextColor:[UIColor lightGrayColor]];
     }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
+    movingHeightConstraint.constant = 0;
     [txtEmailId becomeFirstResponder];
     [UIView commitAnimations];
 }

@@ -49,7 +49,9 @@
     BOOL isDatePickerOpen;
     NSString *strTweetCountURL;
     BOOL isSettingView;
-    UIActionSheet *actionsheet;
+    UIActionSheet *actionsheet1;  // First actionsheet for feedback (asking like vs dislike)
+    UIActionSheet *actionsheet2Likes; // Follow-up actionsheet if someone likes Nimbler
+    UIActionSheet *actionsheet2Dislikes; // Follow-up actionsheet if someone dislikes Nimbler
     Plan *testPlan;
     // Used For Automated test.
     NSString *expectedRequestDate;

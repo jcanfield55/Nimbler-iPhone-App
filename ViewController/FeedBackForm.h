@@ -24,7 +24,7 @@
     IBOutlet UITextView *txtFeedBack;
     IBOutlet UILabel *labelRecTime;
     IBOutlet UILabel *labelCurrentActivityStatus;
-    
+
     /* these buttons removed 10/27/14
     IBOutlet UIButton * btnPlayRecording;
     IBOutlet UIButton * btnStopRecording;
@@ -59,7 +59,12 @@
 @property (strong, nonatomic) IBOutlet UITextField *txtEmailId;
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
+@property (strong, nonatomic) NSString *messagePlaceholder;
+
 @property (strong, nonatomic) UIAlertView * alertView;
+@property (strong, nonatomic) IBOutlet UIView *moveableItemsView;   // View containing all the fields needed to move up and down with keyboard
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *movingHeightConstraint;  // Constraint determining the height the moveable portions go up and down (DE411 fix)
+
 /* @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording; */
 @property (strong, nonatomic) IBOutlet UIView *buttonsBackgroundView;
 @property (strong, nonatomic) IBOutlet UIView *textViewBackground;
@@ -69,6 +74,7 @@
 @property (strong, nonatomic) IBOutlet UINavigationBar *navBar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 @property (nonatomic) BOOL isViewPresented;  // True if this is a pop-up feedback view (FeedbackFormPopUp.xib); false otherwise
+@property (nonatomic) BOOL isDislikeFeedback;  // True if this from the feedback reminder (dislike case).  
 
 @property (strong, nonatomic) UILabel *lblNavigationTitle;
 /*  These buttons were removed 10/27

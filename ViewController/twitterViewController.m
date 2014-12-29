@@ -224,7 +224,10 @@ NSUserDefaults *prefs;
 {
     [super viewWillAppear:animated];
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        [self.mainTable setFrame:CGRectMake(self.mainTable.frame.origin.x,self.mainTable.frame.origin.y+20,self.mainTable.frame.size.width, self.mainTable.frame.size.height)];
+        [self.mainTable setFrame:CGRectMake(self.mainTable.frame.origin.x,
+                                            self.mainTable.frame.origin.y+UI_STATUS_BAR_HEIGHT,
+                                            self.mainTable.frame.size.width,
+                                            self.mainTable.frame.size.height)];
     }
     logEvent(FLURRY_ADVISORIES_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
    [self startProcessForGettingTweets]; 
@@ -243,7 +246,10 @@ NSUserDefaults *prefs;
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        [self.mainTable setFrame:CGRectMake(self.mainTable.frame.origin.x,self.mainTable.frame.origin.y-20,self.mainTable.frame.size.width, self.mainTable.frame.size.height)];
+        [self.mainTable setFrame:CGRectMake(self.mainTable.frame.origin.x,
+                                            self.mainTable.frame.origin.y-UI_STATUS_BAR_HEIGHT,
+                                            self.mainTable.frame.size.width,
+                                            self.mainTable.frame.size.height)];
     }
     [nc_AppDelegate sharedInstance].isTwitterView = NO;
 }

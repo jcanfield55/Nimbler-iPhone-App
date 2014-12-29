@@ -14,7 +14,6 @@
 //#define APP_TITLE                      @"Nimbler SF"
 
 // Feedback Page text
-#define FB_TYPE_MESSAGE_PLACEHOLDER @"Type message to Nimbler"  // Note: make sure this is the same placeholder text entered into the FeedBackForm.xib file
 #define FB_RESPONSE_SUCCEES @"Feedback Sent Successfully"
 #define FB_RESPONSE_FAIL @"Feedback Send Fail"
 #define FB_TITLE_MSG @"Nimbler Feedback"
@@ -101,12 +100,20 @@
 // Network Message
 #define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."
 
-// US-163 user facing text
-#define FEED_BACK_SHEET_TITLE               @"Now that you have used the app a bit, would you share your feedback?"
-#define NO_THANKS_BUTTON_TITLE               @"No Thanks"
-#define APPSTORE_FEEDBACK_BUTTON_TITLE       @"AppStore feedback"
-#define NIMBLER_FEEDBACK_BUTTON_TITLE        @"Feedback for Nimbler"
+// US-163 user facing text (revised in v1.40, 12/2014)
+#define FEED_BACK_SHEET_TITLE               @"Do you like using Nimbler?"
+#define YES_BUTTON_TEXT                     @"Yes"
+#define NO_BUTTON_TEXT                      @"No"
+
+#define FEEDBACK_LIKE_QUESTION_2            @"Will you help spread the word?"
+#define FEEDBACK_LIKE_QUESTION_2_UPGRADE    @"Will you help spread the word? App Store ratings start from scratch with every new version."
+#define APPSTORE_FEEDBACK_BUTTON_TITLE       @"Yes, rate in App Store"
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"
+#define NO_THANKS_BUTTON_TITLE               @"No Thanks"
+
+#define FEEDBACK_DISLIKE_QUESTION_2          @"Can you provide feedback to make Nimbler better?"
+#define NIMBLER_FEEDBACK_BUTTON_TITLE        @"Yes, provide feedback"
+
 
 // NOTE :- Sequence matter.
 #define BART_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" bart",@"bart ",@" airbart",@"airbart ",@" street",@"street ", nil]

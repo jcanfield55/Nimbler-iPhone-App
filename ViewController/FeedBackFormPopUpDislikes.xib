@@ -8,7 +8,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FeedBackForm">
             <connections>
                 <outlet property="btnSubmitFeedback" destination="381" id="390"/>
-                <outlet property="buttonsBackgroundView" destination="368" id="398"/>
                 <outlet property="moveableItemsView" destination="rYb-e9-KRC" id="xUE-F1-0MG"/>
                 <outlet property="movingHeightConstraint" destination="b8Q-6G-yBz" id="TWi-Mo-r2W"/>
                 <outlet property="sentMessageView" destination="401" id="403"/>
@@ -30,61 +29,10 @@
                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rYb-e9-KRC" userLabel="View - Movable items">
                     <rect key="frame" x="0.0" y="0.0" width="277" height="568"/>
                     <subviews>
-                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="368" userLabel="View - Like Nimbler?">
-                            <rect key="frame" x="10" y="70" width="267" height="94"/>
-                            <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Like Nimbler?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="370">
-                                    <rect key="frame" x="10" y="5" width="201" height="21"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="21" id="e8C-6x-f2E"/>
-                                        <constraint firstAttribute="width" constant="201" id="hwz-XL-loB"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Help spread the word" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KEP-NR-3TL">
-                                    <rect key="frame" x="10" y="23" width="201" height="21"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="201" id="adM-QO-xok"/>
-                                        <constraint firstAttribute="height" constant="21" id="lE0-0o-5jH"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r3M-sb-g9e">
-                                    <rect key="frame" x="10" y="48" width="280" height="35"/>
-                                    <color key="backgroundColor" red="0.9882352941176471" green="0.40392156862745099" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="35" id="2fQ-xm-wTk"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                    <state key="normal" title="Rate in App Store">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="appFeedbackClicked:" destination="-1" eventType="touchUpInside" id="y0O-Ht-fW9"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" red="0.37647058820000001" green="0.37647058820000001" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstItem="KEP-NR-3TL" firstAttribute="top" secondItem="370" secondAttribute="bottom" constant="-3" id="0rw-JT-rxe"/>
-                                <constraint firstAttribute="trailing" secondItem="r3M-sb-g9e" secondAttribute="trailing" constant="10" id="8cH-qo-HEX"/>
-                                <constraint firstItem="r3M-sb-g9e" firstAttribute="top" secondItem="KEP-NR-3TL" secondAttribute="bottom" constant="4" id="8qy-v0-KA3"/>
-                                <constraint firstItem="370" firstAttribute="top" secondItem="368" secondAttribute="top" constant="5" id="DeV-Ie-Llf"/>
-                                <constraint firstItem="370" firstAttribute="leading" secondItem="368" secondAttribute="leading" constant="10" id="IbB-8V-b6K"/>
-                                <constraint firstAttribute="height" constant="94" id="eLB-6P-vaZ"/>
-                                <constraint firstItem="KEP-NR-3TL" firstAttribute="leading" secondItem="368" secondAttribute="leading" constant="10" id="iBO-dm-dEe"/>
-                                <constraint firstItem="r3M-sb-g9e" firstAttribute="leading" secondItem="368" secondAttribute="leading" constant="10" id="ycU-4U-nKu"/>
-                            </constraints>
-                        </view>
                         <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t4D-Jf-wem" userLabel="View - See Improved?">
-                            <rect key="frame" x="10" y="172" width="267" height="34"/>
+                            <rect key="frame" x="10" y="70" width="267" height="34"/>
                             <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Something you'd like to see improved?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TBP-k9-dS0">
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Feedback for Nimbler" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TBP-k9-dS0">
                                     <rect key="frame" x="10" y="5" width="257" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="257" id="NEZ-pQ-MiR"/>
@@ -103,7 +51,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="379" userLabel="View - Message text">
-                            <rect key="frame" x="10" y="205" width="267" height="100"/>
+                            <rect key="frame" x="10" y="103" width="267" height="100"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="message.png" translatesAutoresizingMaskIntoConstraints="NO" id="382">
                                     <rect key="frame" x="8" y="5" width="25" height="25"/>
@@ -112,7 +60,7 @@
                                         <constraint firstAttribute="width" constant="25" id="b5c-vv-lr8"/>
                                     </constraints>
                                 </imageView>
-                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" text="Type message to Nimbler" translatesAutoresizingMaskIntoConstraints="NO" id="383">
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" text="Type message" translatesAutoresizingMaskIntoConstraints="NO" id="383">
                                     <rect key="frame" x="33" y="0.0" width="226" height="97"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -131,7 +79,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="380" userLabel="View - Email address">
-                            <rect key="frame" x="10" y="313" width="267" height="44"/>
+                            <rect key="frame" x="10" y="211" width="267" height="44"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="384">
                                     <rect key="frame" x="10" y="10" width="25" height="25"/>
@@ -161,7 +109,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="381">
-                            <rect key="frame" x="10" y="365" width="267" height="44"/>
+                            <rect key="frame" x="10" y="263" width="267" height="44"/>
                             <color key="backgroundColor" red="0.9882352941176471" green="0.40392156862745099" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="NS9-Rd-f7E"/>
@@ -182,15 +130,12 @@
                     <constraints>
                         <constraint firstItem="379" firstAttribute="leading" secondItem="rYb-e9-KRC" secondAttribute="leading" constant="10" id="5kk-vN-gqA"/>
                         <constraint firstItem="381" firstAttribute="top" secondItem="380" secondAttribute="bottom" constant="8" id="7hG-Y6-3ze"/>
-                        <constraint firstItem="368" firstAttribute="bottom" secondItem="t4D-Jf-wem" secondAttribute="top" constant="-8" id="DVv-Sx-KEd"/>
                         <constraint firstAttribute="trailing" secondItem="381" secondAttribute="trailing" id="F8d-C1-adm"/>
                         <constraint firstItem="379" firstAttribute="top" secondItem="t4D-Jf-wem" secondAttribute="bottom" id="KQd-xV-GSL"/>
-                        <constraint firstItem="368" firstAttribute="leading" secondItem="rYb-e9-KRC" secondAttribute="leading" constant="10" id="SoJ-aV-c5f"/>
+                        <constraint firstItem="t4D-Jf-wem" firstAttribute="top" secondItem="rYb-e9-KRC" secondAttribute="top" constant="70" id="OqW-xo-ady"/>
                         <constraint firstAttribute="trailing" secondItem="379" secondAttribute="trailing" id="Um4-aR-NcE"/>
-                        <constraint firstAttribute="trailing" secondItem="368" secondAttribute="trailing" id="V23-O3-BsD"/>
                         <constraint firstItem="380" firstAttribute="leading" secondItem="rYb-e9-KRC" secondAttribute="leading" constant="10" id="XfP-Yi-ub0"/>
                         <constraint firstItem="380" firstAttribute="top" secondItem="379" secondAttribute="bottom" constant="8" id="ajn-E8-xWb"/>
-                        <constraint firstItem="368" firstAttribute="top" secondItem="rYb-e9-KRC" secondAttribute="top" constant="70" id="e0t-wE-WrJ"/>
                         <constraint firstItem="t4D-Jf-wem" firstAttribute="leading" secondItem="rYb-e9-KRC" secondAttribute="leading" constant="10" id="eV3-jd-z4y"/>
                         <constraint firstAttribute="trailing" secondItem="380" secondAttribute="trailing" id="kSt-dA-1C6"/>
                         <constraint firstItem="381" firstAttribute="leading" secondItem="rYb-e9-KRC" secondAttribute="leading" constant="10" id="pcT-MX-5J3"/>
@@ -251,7 +196,7 @@
                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
                             <connections>
-                                <action selector="cancelButtonClicked:" destination="-1" eventType="touchUpInside" id="gHT-sN-Cho"/>
+                                <action selector="cancelButtonClicked:" destination="-1" eventType="touchUpInside" id="E2R-lw-l6V"/>
                             </connections>
                         </button>
                     </subviews>

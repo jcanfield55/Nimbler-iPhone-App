@@ -58,7 +58,7 @@
         self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
         self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
         self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.barBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0,20,
+        self.barBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0,UI_STATUS_BAR_HEIGHT,
                                                                       self.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN,
                                                                       NAVIGATION_ITEM_HEIGHT)];
         
@@ -70,11 +70,11 @@
         
         float navigation_button_gap = (self.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN - (3 * NAVIGATION_ITEM_WIDTH)) / 2.0; // This is the extra space between buttons
         navigation_button_gap = 0;   // Test: try not putting any gap at all.  
-        btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS,20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
+        btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS,UI_STATUS_BAR_HEIGHT, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
         btn2.frame = CGRectMake(NAVIGATION_ITEM1_XPOS + 1 * (NAVIGATION_ITEM_WIDTH + navigation_button_gap),
-                                20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
+                                UI_STATUS_BAR_HEIGHT, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
         btn3.frame = CGRectMake(NAVIGATION_ITEM1_XPOS + 2 * (NAVIGATION_ITEM_WIDTH + navigation_button_gap),
-                                20, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT);
+                                UI_STATUS_BAR_HEIGHT, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT);
         
         btnImage = [UIImage imageNamed:@"notificationUnSelected@2x.png"];
         btnImageSelected = [UIImage imageNamed:@"notificationSelected@2x.png"];
