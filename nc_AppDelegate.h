@@ -23,7 +23,7 @@
 #import "Agencies.h"
 #import "RevealController.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
     BOOL receivedReply;
@@ -49,9 +49,9 @@
     BOOL isDatePickerOpen;
     NSString *strTweetCountURL;
     BOOL isSettingView;
-    UIActionSheet *actionsheet1;  // First actionsheet for feedback (asking like vs dislike)
-    UIActionSheet *actionsheet2Likes; // Follow-up actionsheet if someone likes Nimbler
-    UIActionSheet *actionsheet2Dislikes; // Follow-up actionsheet if someone dislikes Nimbler
+    UIAlertView *feedbackAlert1;  // First alertView for feedback (asking like vs dislike)
+    UIAlertView *feedbackAlert2Likes; // Follow-up alertView if someone likes Nimbler
+    UIAlertView *feedbackAlert2Dislikes; // Follow-up alertView if someone dislikes Nimbler
     Plan *testPlan;
     // Used For Automated test.
     NSString *expectedRequestDate;

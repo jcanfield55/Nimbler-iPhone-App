@@ -31,7 +31,6 @@
 #import "Flurry.h"
 #endif
 
-#define BTN_EXIT        @"Exit fromApp"
 #define BTN_OK          @"Ok"
 #define BTN_CANCEL      @"Continue"
 
@@ -621,8 +620,8 @@ FeedBackForm *fbView;
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     
-    if(actionsheet1){
-        [actionsheet1 dismissWithClickedButtonIndex:-1 animated:NO];
+    if(feedbackAlert1){
+        [feedbackAlert1 dismissWithClickedButtonIndex:-1 animated:NO];
     }
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
@@ -692,8 +691,8 @@ FeedBackForm *fbView;
     
     if([[NSUserDefaults standardUserDefaults] boolForKey:FEEDBACK_REMINDER_PENDING]){
         if(ndaysCount >= daysToShowAlert){
-            actionsheet1 = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:YES_BUTTON_TEXT, NO_BUTTON_TEXT, nil];  // US247 implementation
-            [actionsheet1 showFromTabBar:self.tabBarController.tabBar];
+            feedbackAlert1 = [[UIAlertView alloc] initWithTitle:FEED_BACK_SHEET_TITLE message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:YES_BUTTON_TEXT, NO_BUTTON_TEXT, nil];  // US247 implementation
+            [feedbackAlert1 show];
         }
     }
 }
@@ -738,8 +737,8 @@ FeedBackForm *fbView;
             [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:nil afterDelay:0.5];
         }
     }
-    if(actionsheet1){
-        [actionsheet1 dismissWithClickedButtonIndex:-1 animated:NO];
+    if(feedbackAlert1){
+        [feedbackAlert1 dismissWithClickedButtonIndex:-1 animated:NO];
     }
     if(self.isTwitterView){
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
@@ -1299,7 +1298,7 @@ FeedBackForm *fbView;
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     isRemoteNotification = YES;
-    [actionsheet1 dismissWithClickedButtonIndex:-1 animated:NO];
+    [feedbackAlert1 dismissWithClickedButtonIndex:-1 animated:NO];
     @try {
         for (id key in userInfo) {
             NIMLOG_EVENT1(@"didReceiveRemoteNotification key: %@, value: %@", key, [userInfo objectForKey:key]);
@@ -1341,14 +1340,88 @@ FeedBackForm *fbView;
     }
 }
 
--(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)alertView: (UIAlertView *)uiAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    if ([btnName isEqualToString:BTN_OK]) {
-        [self.tabBarController setSelectedIndex:1];
-    } else if([btnName isEqualToString:BTN_EXIT]){
-        exit(0);
+    NSString* buttonResponse;
+    if (uiAlertView == feedbackAlert1) {  // if this is the likes / dislikes action sheet
+        if(buttonIndex == 0){ // likes
+            buttonResponse = @"Likes = Yes";
+            [[NSUserDefaults standardUserDefaults] setObject:FEEDBACK_LIKES_VALUE forKey:FEEDBACK_LIKES_DISLIKES];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            NSString *question2Message = nil;
+            if ([[NSUserDefaults standardUserDefaults] objectForKey:IS_UPGRADED_CUSTOMER]) {
+                question2Message = FEEDBACK_LIKE_QUESTION_2_UPGRADE_MESSAGE;
+            }
+            feedbackAlert2Likes = [[UIAlertView alloc] initWithTitle:FEEDBACK_LIKE_QUESTION_2 message:question2Message delegate:self cancelButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE, REMIND_ME_LATER_BUTTON_TITLE, NO_THANKS_BUTTON_TITLE, nil];
+            [feedbackAlert2Likes show];
+        }
+        else if (buttonIndex == 1) { //dislikes
+            buttonResponse = @"Likes = No";
+            [[NSUserDefaults standardUserDefaults] setObject:FEEDBACK_DISLIKES_VALUE forKey:FEEDBACK_LIKES_DISLIKES];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            feedbackAlert2Dislikes = [[UIAlertView alloc] initWithTitle:FEEDBACK_DISLIKE_QUESTION_2 message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:NIMBLER_FEEDBACK_BUTTON_TITLE, NO_THANKS_BUTTON_TITLE, nil];
+            [feedbackAlert2Dislikes show];
+        }
+        else {
+            logError(@"nc_AppDelegate --> alertView clickedButtonAtIndex",
+                     [NSString stringWithFormat:@"feedbackAlert1: Unexpected button index = %d", buttonIndex]);
+        }
     }
+    else if (uiAlertView == feedbackAlert2Likes) {
+        if(buttonIndex == 0){
+            buttonResponse = @"App Store feedback";
+            //Fixed DE-326
+            NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
+            [[UIApplication sharedApplication] openURL:url];
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else if(buttonIndex == 1){
+            buttonResponse = @"Remind me later";
+            [[NSUserDefaults standardUserDefaults] setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_REMIND_ME_LATER_NUMBER
+                                                       forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+            [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:DAYS_COUNT];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else if(buttonIndex == 2){
+            buttonResponse = @"No thanks";
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else {
+            logError(@"nc_AppDelegate --> alertView clickedButtonAtIndex",
+                     [NSString stringWithFormat:@"feedbackAlert2Likes: Unexpected button index = %d", buttonIndex]);
+        }
+    }
+    else if (uiAlertView == feedbackAlert2Dislikes) {
+        if(buttonIndex == 0){
+            buttonResponse = @"Nimbler feedback";
+            FeedBackForm *feedBackForm;
+            feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUpDislikes" bundle:nil];
+            feedBackForm.isViewPresented = true;
+            feedBackForm.isDislikeFeedback = true;
+            [self.toFromViewController presentViewController:feedBackForm animated:YES completion:nil];
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else if(buttonIndex == 1){
+            buttonResponse = @"No thanks";
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else {
+            logError(@"nc_AppDelegate --> alertView clickedButtonAtIndex",
+                     [NSString stringWithFormat:@"feedbackAlert2Dislikes: Unexpected button index = %d", buttonIndex]);
+        }
+    }
+    else {
+        NSString *btnName = [uiAlertView buttonTitleAtIndex:buttonIndex];
+        if ([btnName isEqualToString:BTN_OK]) {
+            [self.tabBarController setSelectedIndex:1];
+        }
+    }
+    
+    logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
 }
 
 -(void)updateTime{
@@ -1429,94 +1502,6 @@ FeedBackForm *fbView;
     }
 }
 
-// ActoinSheet Delegate Methods
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    NSString* buttonResponse;
-    if (actionSheet == actionsheet1) {  // if this is the likes / dislikes action sheet
-        if(buttonIndex == 0){ // likes
-            buttonResponse = @"Likes = Yes";
-            [[NSUserDefaults standardUserDefaults] setObject:FEEDBACK_LIKES_VALUE forKey:FEEDBACK_LIKES_DISLIKES];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            NSString *question2Message;
-            if ([[NSUserDefaults standardUserDefaults] objectForKey:IS_UPGRADED_CUSTOMER]) {
-                question2Message = FEEDBACK_LIKE_QUESTION_2_UPGRADE;
-            }
-            else {
-                question2Message = FEEDBACK_LIKE_QUESTION_2;
-            }
-            actionsheet2Likes = [[UIActionSheet alloc] initWithTitle:question2Message delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE, REMIND_ME_LATER_BUTTON_TITLE, nil];
-            actionsheet2Likes.cancelButtonIndex = actionsheet2Likes.numberOfButtons - 1;
-            [actionsheet2Likes showFromTabBar:self.tabBarController.tabBar];
-        }
-        else if (buttonIndex == 1) { //dislikes
-            buttonResponse = @"Likes = No";
-            [[NSUserDefaults standardUserDefaults] setObject:FEEDBACK_DISLIKES_VALUE forKey:FEEDBACK_LIKES_DISLIKES];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            actionsheet2Dislikes = [[UIActionSheet alloc] initWithTitle:FEEDBACK_DISLIKE_QUESTION_2 delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:NIMBLER_FEEDBACK_BUTTON_TITLE, nil];
-            actionsheet2Dislikes.cancelButtonIndex = actionsheet2Dislikes.numberOfButtons - 1;
-            [actionsheet2Dislikes showFromTabBar:self.tabBarController.tabBar];
-        }
-        else {
-            logError(@"nc_AppDelegate --> actionSheet clickedButtonAtIndex",
-                     [NSString stringWithFormat:@"actionsheet1: Unexpected button index = %d", buttonIndex]);
-        }
-    }
-    else if (actionSheet == actionsheet2Likes) {
-        if(buttonIndex == 0){
-            buttonResponse = @"App Store feedback";
-            //Fixed DE-326
-            NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
-            [[UIApplication sharedApplication] openURL:url];
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else if(buttonIndex == 1){
-            buttonResponse = @"Remind me later";
-            [[NSUserDefaults standardUserDefaults] setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_REMIND_ME_LATER_NUMBER
-                                                       forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
-            [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:DAYS_COUNT];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else if(buttonIndex == [actionSheet cancelButtonIndex]){
-            buttonResponse = @"No thanks";
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else {
-            logError(@"nc_AppDelegate --> actionSheet clickedButtonAtIndex",
-                     [NSString stringWithFormat:@"actionsheet2Likes: Unexpected button index = %d", buttonIndex]);
-        }
-    }
-    else if (actionSheet == actionsheet2Dislikes) {
-        
-        if(buttonIndex == 0){
-            buttonResponse = @"Nimbler feedback";
-            FeedBackForm *feedBackForm;
-            feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUpDislikes" bundle:nil];
-            feedBackForm.isViewPresented = true;
-            feedBackForm.isDislikeFeedback = true;
-            [self.toFromViewController presentViewController:feedBackForm animated:YES completion:nil];
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else if(buttonIndex == [actionSheet cancelButtonIndex]){
-            buttonResponse = @"No thanks";
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else {
-            logError(@"nc_AppDelegate --> actionSheet clickedButtonAtIndex",
-                     [NSString stringWithFormat:@"actionsheet2DisLikes: Unexpected button index = %d", buttonIndex]);
-        }
-    }
-    else {
-        logError(@"nc_AppDelegate --> actionSheet clickedButtonAtIndex",
-                 [NSString stringWithFormat:@"Unknown actionSheet with button index = %d", buttonIndex]);
-    }
-    
-    logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
-}
 
 // Get Application Type from Bundle Identifier
 - (NSString *)getAppTypeFromBundleId{

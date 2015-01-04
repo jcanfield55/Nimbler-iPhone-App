@@ -26,7 +26,7 @@ typedef enum {
 } ToFromEditMode;
 
 
-@interface ToFromViewController : UIViewController <LocationsGeocodeResultsDelegate, RKRequestDelegate, NewPlanAvailableDelegate, UIActionSheetDelegate,UIAlertViewDelegate>
+@interface ToFromViewController : UIViewController <LocationsGeocodeResultsDelegate, RKRequestDelegate, NewPlanAvailableDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView* mainToFromView;
 @property (strong, nonatomic) IBOutlet UIView* fromView;

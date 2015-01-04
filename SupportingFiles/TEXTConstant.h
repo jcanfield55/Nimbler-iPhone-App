@@ -106,7 +106,7 @@
 #define NO_BUTTON_TEXT                      @"No"
 
 #define FEEDBACK_LIKE_QUESTION_2            @"Will you help spread the word?"
-#define FEEDBACK_LIKE_QUESTION_2_UPGRADE    @"Will you help spread the word? App Store ratings start from scratch with every new version."
+#define FEEDBACK_LIKE_QUESTION_2_UPGRADE_MESSAGE @"App Store ratings start from scratch with every new version."
 #define APPSTORE_FEEDBACK_BUTTON_TITLE       @"Yes, rate in App Store"
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"
 #define NO_THANKS_BUTTON_TITLE               @"No Thanks"
