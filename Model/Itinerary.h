@@ -147,12 +147,6 @@ typedef enum {
 // return the conflict leg from sorted legs of itinerary
 - (Leg *) conflictLegFromItinerary;
 
-// Adjust the legs in itinerary if possible otherwise return conflictleg.
-// First Find the conflict leg from itinerary the check if next leg and it is scheduled then return conflict leg.
-// Find next to next leg if it is then check if new computed end date comes after start date then return leg.
-// then compute realtime data for next leg from conflict leg realtime.
-- (Leg *) adjustLegsIfRequired;
-
 // return true if itinerary have only unscheduled leg.
 - (BOOL) haveOnlyUnScheduledLeg;
 

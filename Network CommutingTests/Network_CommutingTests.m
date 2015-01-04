@@ -1926,11 +1926,11 @@
     //[[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan12];
     //[self someMethodToWaitForResult];
     
-    for(int i=0;i<[[plan12 sortedItineraries] count];i++){
-        Itinerary *iti = [[plan12 sortedItineraries] objectAtIndex:i];
-        Leg * legs = [iti adjustLegsIfRequired];
+    //for(int i=0;i<[[plan12 sortedItineraries] count];i++){
+    //    Itinerary *iti = [[plan12 sortedItineraries] objectAtIndex:i];
+        // Leg * legs = [iti adjustLegsIfRequired]; -- removed this routine because unused except by tests, JC 1/3/2015
         // Leg adjustment is not possible and we need to create new leg from this leg and realtime.
-        STAssertNotNil(legs,@"");
-    }
+        // STAssertNotNil(legs,@"");
+    // }
 }
 @end

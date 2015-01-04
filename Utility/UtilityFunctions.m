@@ -445,7 +445,8 @@ void logEvent(NSString *eventName, NSString *param1name, NSString *param1value, 
         int i=1;
         while (param = [enumerator nextObject]) {  // enumerate thru all the type strings in the dictionary
             NSString* value = [dictionary objectForKey:param];
-            [log appendFormat:@"\n  Param%d: %@, Value%d: %@",i, param, i++, value];
+            [log appendFormat:@"\n  Param%d: %@, Value%d: %@",i, param, i, value];
+            i++;
         }
         
         NIMLOG_FLURRY(@"%@", log);

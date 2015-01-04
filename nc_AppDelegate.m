@@ -23,6 +23,7 @@
 #import "RouteExcludeSetting.h"
 #import "RevealController.h"
 #import "NimblerApplication.h"
+#import <sys/xattr.h>
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
@@ -166,33 +167,21 @@ FeedBackForm *fbView;
 }
 
 // This methods will prevent document directory backups to icloud
--(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+// From https://developer.apple.com/library/ios/qa/qa1719/_index.html
+//
+- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
 {
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
     const char* filePath = [[URL path] fileSystemRepresentation];
+    
     const char* attrName = "com.apple.MobileBackup";
-    if (&NSURLIsExcludedFromBackupKey == nil) {
-        // iOS 5.0.1 and lower
-        u_int8_t attrValue = 1;
-        int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
-        return result == 0;
-        
-    }
-    else {
-        // First try and remove the extended attribute if it is present
-        int result = getxattr(filePath, attrName, NULL, sizeof(u_int8_t), 0, 0);
-        if (result != -1) {
-            // The attribute exists, we need to remove it
-            int removeResult = removexattr(filePath, attrName, 0);
-            if (removeResult == 0) {
-            }
-        }
-        
-        // Set the new key
-        NSError *error = nil;
-        [URL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
-        return error == nil;
-    }
+    u_int8_t attrValue = 1;
+    
+    int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+    return result == 0;
 }
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -1489,10 +1478,11 @@ FeedBackForm *fbView;
 
 -(BOOL)isNetworkConnectionLive
 {
+    /* The following notification request does not call anything (no handleNetworkChange selector) so commenting out
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkChange:) name:kReachabilityChangedNotification object:nil];
-    
+     */
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
-    [reachability startNotifier];
+    // [reachability startNotifier];    // Do not turn on notifier since it appears unused, JC 1/3/2015
     
     NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
     

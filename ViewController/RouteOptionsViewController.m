@@ -31,6 +31,7 @@
 {
     // Variables for internal use
     BOOL setWarningHidden; // True if we should set the warning to be hidden upon viewWillAppear
+    NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
 }
 
 // Attributed strings are only supported on iOS6 or later, so do not call this method on < iOS6
@@ -74,6 +75,8 @@ UIImage *imageDetailDisclosure;
         lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
         self.navigationItem.titleView=lblNavigationTitle;
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        drawingContext = [[NSStringDrawingContext alloc] init];
+        drawingContext.minimumScaleFactor = 0.0;  // Specifies no scaling
     }
     return self;
 }
@@ -619,13 +622,18 @@ UIImage *imageDetailDisclosure;
             subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                            Font:(UIFont *)[UIFont MEDIUM_FONT]];
         }
-        CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
-                                 constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        CGRect titleRect = [titleText
+                                boundingRectWithSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)
+                                options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_BOLD_FONT] forKey:NSFontAttributeName]
+                                context:drawingContext];
+        CGRect subtitleRect = [subtitleText
+                                boundingRectWithSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)
+                                options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_FONT] forKey:NSFontAttributeName]
+                                context:drawingContext];
         
-        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont MEDIUM_FONT]
-                                       constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-        
-        CGFloat height = titleSize.height + subtitleSize.height + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+        CGFloat height = ceil(titleRect.size.height) + ceil(subtitleRect.size.height) + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
         if (height < ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
         }

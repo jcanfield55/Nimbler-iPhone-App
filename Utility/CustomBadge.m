@@ -43,7 +43,8 @@
 {
 	CGSize retValue = CGSizeMake(25, 25);
 	CGFloat rectWidth, rectHeight;
-	CGSize stringSize = [badgeString sizeWithFont:[UIFont boldSystemFontOfSize:12]];
+    CGSize stringSize = [badgeString sizeWithAttributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:12] forKey:NSFontAttributeName]];
+                         
 	CGFloat flexSpace;
 	if ([badgeString length]>=2) 
 	{

@@ -321,7 +321,7 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
 {
     if (!locationFromIOSAddressMappingDictionary) {
         locationFromIOSAddressMappingDictionary =
-        [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSMutableDictionary dictionaryWithObjectsAndKeys:
          @"locality",@"City",
          @"country",@"Country",
          @"country(short)",@"CountryCode",

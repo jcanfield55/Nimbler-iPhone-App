@@ -39,6 +39,7 @@
     int routeDetailsTableCellWidth;  // DE408 fix.  Make this variable a instance variable (rather than local to a method) and use the value from the heightForRowAtIndex method when within the cellForRowAtIndex method.  Previously the first cells would not have the full width of the table.  
     
     NSMutableDictionary *imageDictionary; // Dictionary to hold pre-loaded table images
+    NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
 }
 @end
 
@@ -172,6 +173,8 @@ NSUserDefaults *prefs;
             for (NSString* filename in imageNameArray) {
                 [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
             }
+            drawingContext = [[NSStringDrawingContext alloc] init];
+            drawingContext.minimumScaleFactor = 0.0;  // Specifies no scaling
         }
         mapHeight = mapView.frame.size.height;
         tableHeight = mainTable.frame.size.height;
@@ -415,16 +418,20 @@ NSUserDefaults *prefs;
         }
         NIMLOG_AUTOSIZE(@"Cell Row #%d: Width = %d", [indexPath row], routeDetailsTableCellWidth);
         NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
-        CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
+        CGRect attributedLabelRect = [textString
+                                      boundingRectWithSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)
+                                      options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                      attributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] forKey:NSFontAttributeName]
+                                      context:drawingContext];
         NSInteger attributedLblYPOS = 0;
-        if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0 && attributedLabelSize.height>18){
+        if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0 && ceil(attributedLabelRect.size.height)>18){
             attributedLblYPOS =5;
         }
         else if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0){
             attributedLblYPOS =10;
         }
         
-        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(40,attributedLblYPOS,routeDetailsTableCellWidth, attributedLabelSize.height)];
+        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(ROUTE_DETAILS_CELL_TEXT_START_X,attributedLblYPOS,routeDetailsTableCellWidth, ceil(attributedLabelRect.size.height))];
         attributedLabel.font=[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE];
         attributedLabel.numberOfLines = 5;
         if (itineraryNumber == [indexPath row]) {
@@ -445,7 +452,7 @@ NSUserDefaults *prefs;
         [cell.contentView addSubview:attributedLabel];
         
         CGSize subTitleLabelSize = [[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE] constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40,attributedLabelSize.height+3,routeDetailsTableCellWidth, subTitleLabelSize.height)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(ROUTE_DETAILS_CELL_TEXT_START_X,ceil(attributedLabelRect.size.height)+3,routeDetailsTableCellWidth, subTitleLabelSize.height)];
         label.numberOfLines = 2;
         [label setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
         [label setLineBreakMode:NSLineBreakByWordWrapping];
@@ -487,10 +494,17 @@ NSUserDefaults *prefs;
         routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
-        CGSize titleSize = [titleText sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
-        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]
-                                       constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
-        CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+        CGRect titleRect = [titleText
+                            boundingRectWithSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)
+                            options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                            attributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] forKey:NSFontAttributeName]
+                            context:drawingContext];
+        CGRect subtitleRect = [subtitleText
+                               boundingRectWithSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)
+                               options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                               attributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:STANDARD_FONT_SIZE] forKey:NSFontAttributeName]
+                               context:drawingContext];
+        CGFloat height = ceil(titleRect.size.height) + ceil(subtitleRect.size.height) + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
