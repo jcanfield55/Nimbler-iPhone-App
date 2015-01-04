@@ -628,7 +628,7 @@ NSUserDefaults *prefs;
     [self.navigationController.navigationBar setHidden:YES];
     RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)[nc_AppDelegate sharedInstance].tabBarController;
     [rxCustomTabbar showAllElements];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)openUrl:(NSURL *)url {
@@ -661,7 +661,7 @@ NSUserDefaults *prefs;
         [controller.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     
-    [self presentModalViewController:controller animated:YES];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 

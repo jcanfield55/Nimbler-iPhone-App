@@ -15,11 +15,9 @@ WebView *singleton;
 + (WebView *)instance {
     if (singleton == nil) {
         singleton = [[WebView alloc] init];
-        if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-            singleton.frame = CGRectMake(0, 0, 320, 503);
-        } else {
-            singleton.frame = CGRectMake(0, 0, 320, 415);
-        }
+        singleton.frame = CGRectMake(0, 0,
+                                     [[UIScreen mainScreen] bounds].size.width,
+                                     [[UIScreen mainScreen] bounds].size.height - WEBVIEW_TOP_BAR_HEIGHT); // DE412 fix for auto-sizing
         [singleton setClipsToBounds:YES];
         [singleton setScalesPageToFit:YES];
     }

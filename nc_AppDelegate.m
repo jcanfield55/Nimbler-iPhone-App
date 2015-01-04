@@ -22,6 +22,7 @@
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
 #import "RevealController.h"
+#import "NimblerApplication.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
@@ -1372,7 +1373,8 @@ FeedBackForm *fbView;
             buttonResponse = @"App Store feedback";
             //Fixed DE-326
             NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
-            [[UIApplication sharedApplication] openURL:url];
+            NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];	
+            [sharedApp openURLWithoutWebView:url];
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }

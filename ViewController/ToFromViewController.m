@@ -27,6 +27,7 @@
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
 #import "LocationPickerViewController.h"
+#import "NimblerApplication.h"
 
 
 @interface ToFromViewController()
@@ -1380,7 +1381,8 @@ UIImage *imageDetailDisclosure;
     @try {
         NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
         if ([btnName isEqualToString:@"Yes"]) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LocationServices"]];
+            NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];
+            [sharedApp openURLWithoutWebView:[NSURL URLWithString:@"prefs:root=LocationServices"]];
         }    
     }
     @catch (NSException *exception) {

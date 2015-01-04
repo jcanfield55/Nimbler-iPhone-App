@@ -14,6 +14,7 @@
 #import "UtilityFunctions.h"
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "Plan.h"
+#import "NimblerApplication.h"
 
 @implementation UberMgr
 
@@ -223,7 +224,8 @@
         
         NSString *uberAppURLString = [UBER_APP_BASE_URL appendQueryParams:paramDictionary];
         NSURL *uberAppURL = [NSURL URLWithString:uberAppURLString];
-        [[UIApplication sharedApplication] openURL:uberAppURL];
+        NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];
+        [sharedApp openURLWithoutWebView:uberAppURL];
     }
     else { // No Uber app. Open Mobile Website.
         [paramDictionary setObject:plan.fromLocation.lat forKey:UBER_WEB_PICKUP_LATITUDE];
@@ -243,7 +245,8 @@
         
         NSString *uberWebURLString = [UBER_WEB_BASE_URL appendQueryParams:paramDictionary];
         NSURL *uberWebURL = [NSURL URLWithString:uberWebURLString];
-        [[UIApplication sharedApplication] openURL:uberWebURL];   // Go to webview with designated URL
+        NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];
+        [sharedApp openURL:uberWebURL];  // Go to webview with designated URL
     }
 }
 

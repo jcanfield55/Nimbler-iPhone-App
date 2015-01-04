@@ -197,6 +197,9 @@
 // UIanimation motion
 #define ANIMATION_STANDART_MOTION_SPEED 0.3
 
+// WebView
+#define WEBVIEW_TOP_BAR_HEIGHT 65  // height for back button bar
+
 // Images
 #define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"navBar.png"]
 

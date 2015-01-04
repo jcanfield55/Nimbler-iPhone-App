@@ -719,28 +719,6 @@ UIImage *imageDetailDisclosure;
     }
 }
 
-// Routine to open webview (for Uber URL, etc)
-- (void)openUrl:(NSURL *)url{
-    UIViewController *webViewController = [[UIViewController alloc] init];
-    UIButton * btnGoBack = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
-    [btnGoBack addTarget:self action:@selector(backToRouteOptionsView) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoBack setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-    
-    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoBack];
-    webViewController.navigationItem.leftBarButtonItem = backTonimbler;
-    [webViewController.view addSubview:[WebView instance]];
-    
-    if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
-        webViewController.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    [[WebView instance] loadRequest:request];
-    [[WebView instance] setScalesPageToFit:YES];
-    [WebView instance].delegate = self;
-
-    [[self navigationController] pushViewController:webViewController animated:YES];
-}
-
 - (void) backToRouteOptionsView {
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];

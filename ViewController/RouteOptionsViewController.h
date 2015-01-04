@@ -46,7 +46,6 @@ NewPlanAvailableDelegate, UIWebViewDelegate>
 - (void) changeMainTableSettings;
 
 - (void) requestServerForRealTime;
-- (void)openUrl:(NSURL *)url;  // Used to open Uber urls, etc
 
 - (IBAction)feedBackClicked:(id)sender;
 

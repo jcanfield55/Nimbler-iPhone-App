@@ -523,7 +523,7 @@ NSUserDefaults *prefs;
 // Hide the sent message view after 3 seconds
 - (void) hideMessageView{
     if(isViewPresented){
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else{
         [self.navigationController.navigationBar setHidden:NO];
@@ -786,7 +786,7 @@ NSUserDefaults *prefs;
 }
 
 -(IBAction)cancelButtonClicked:(id)sender{
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void) hideTabBar {
