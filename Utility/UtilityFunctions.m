@@ -367,16 +367,16 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
     NSMutableString *truncatedString = [NSMutableString stringWithString:string];
     
     // Make sure string is longer than requested width
-    if ([string sizeWithFont:font].width > width)
+    if ([string sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]].width > width)
     {
         // Accommodate for ellipsis we'll tack on the end
-        width -= [ellipsis sizeWithFont:font].width;
+        width -= [ellipsis sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]].width;
         
         // Get range for last character in string
         NSRange range = {truncatedString.length - 1, 1};
         
         // Loop, deleting characters until string fits within width
-        while ([truncatedString sizeWithFont:font].width > width)
+        while ([truncatedString sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]].width > width)
         {
             // Delete character at end
             [truncatedString deleteCharactersInRange:range];

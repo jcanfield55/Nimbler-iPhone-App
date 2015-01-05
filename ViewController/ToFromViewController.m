@@ -47,6 +47,7 @@
     NSTimer* activityTimer;
     UIBarButtonItem *barButtonSwap;  // Swap left bar button (for when in NO_EDIT mode)
     UIBarButtonItem *barButtonCancel; // Cancel left bar button (for when in EDIT mode)
+    NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
 }
 
 // Internal methods
@@ -123,7 +124,8 @@ UIImage *imageDetailDisclosure;
             
             // Accessibility Label For UI Automation.
             barButtonCancel.accessibilityLabel = CANCEL_BUTTON;
-
+            drawingContext = [[NSStringDrawingContext alloc] init];
+            drawingContext.minimumScaleFactor = 0.0;  // Specifies no scaling
         }
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
@@ -223,7 +225,6 @@ UIImage *imageDetailDisclosure;
     // Accessibility Label For UI Automation.
     departArriveSelector.accessibilityLabel = DEPART_OR_ARRIVE_SEGMENT_BUTTON;
     
-    departArriveSelector.segmentedControlStyle = UISegmentedControlStyleBar;
     departArriveSelector.selectedSegmentIndex = 1;
     [departArriveSelector addTarget:self action:@selector(segmentChange) forControlEvents:UIControlEventValueChanged];
     
@@ -751,41 +752,43 @@ UIImage *imageDetailDisclosure;
     if(isFrom){
         strLocation = self.txtFromView.text;
         
-        CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtFromView.frame.size.width, 9999) lineBreakMode:nil];
-        if(stringSize.width>170 || stringSize.height>16){
+        CGRect stringRect = [strLocation
+                             boundingRectWithSize:CGSizeMake(txtFromView.frame.size.width, CGFLOAT_MAX)
+                             options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                             attributes:[NSDictionary dictionaryWithObject:txtFromView.font forKey:NSFontAttributeName]
+                             context:drawingContext];
+        
+        if(ceil(stringRect.size.height)>TOFROM_TEXTVIEW_SCROLL_HEIGHT_THRESHOLD){
             CGPoint scrollPoint = self.txtFromView.contentOffset;
-            if(scrollPoint.y<8){
-                scrollPoint.y= scrollPoint.y+8;
+            if(scrollPoint.y<TOFROM_TEXTVIEW_SCROLL_MULTILINE_OFFSET){
+                scrollPoint.y= scrollPoint.y+TOFROM_TEXTVIEW_SCROLL_MULTILINE_OFFSET;
                 [self.txtFromView setContentOffset:scrollPoint animated:NO];
             }
+            NIMLOG_AUTOSIZE(@"From Scroll Offset = %f, view width = %f", scrollPoint.y, txtFromView.frame.size.width);
         }
         else{
-            CGPoint scrollPoint = self.txtFromView.contentOffset;
-            if(scrollPoint.y==2){
-                scrollPoint.y= scrollPoint.y-2;
-                [self.txtFromView setContentOffset:scrollPoint animated:NO];
-            }
-            
+            self.txtFromView.contentOffset = CGPointZero;
         }
     }
     else{
         strLocation = self.txtToView.text;
         
-        CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtToView.frame.size.width, 9999) lineBreakMode:nil];
-        if(stringSize.width>210 || stringSize.height>16){
+        CGRect stringRect = [strLocation
+                             boundingRectWithSize:CGSizeMake(txtToView.frame.size.width, CGFLOAT_MAX)
+                             options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                             attributes:[NSDictionary dictionaryWithObject:txtToView.font forKey:NSFontAttributeName]
+                             context:drawingContext];
+        
+        if(ceil(stringRect.size.height)>TOFROM_TEXTVIEW_SCROLL_HEIGHT_THRESHOLD){
             CGPoint scrollPoint = self.txtToView.contentOffset;
-            if(scrollPoint.y<8){
-                scrollPoint.y= scrollPoint.y+8;
+            if(scrollPoint.y<TOFROM_TEXTVIEW_SCROLL_MULTILINE_OFFSET){
+                scrollPoint.y= scrollPoint.y+TOFROM_TEXTVIEW_SCROLL_MULTILINE_OFFSET;
                 [self.txtToView setContentOffset:scrollPoint animated:NO];
             }
+            NIMLOG_AUTOSIZE(@"To Scroll Offset = %f, view width = %f", scrollPoint.y, txtToView.frame.size.width);
         }
         else{
-            CGPoint scrollPoint = self.txtToView.contentOffset;
-            if(scrollPoint.y==2){
-                scrollPoint.y= scrollPoint.y-2;
-                [self.txtToView setContentOffset:scrollPoint animated:NO];
-            }
-            
+            self.txtToView.contentOffset = CGPointZero;
         }
     }
 }
@@ -1574,6 +1577,8 @@ UIImage *imageDetailDisclosure;
                                                                DATE_PICKER_HEIGHT)];  // initially locate it off bottom of screen
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
     datePicker.minuteInterval = 5;
+    [datePicker setBackgroundColor:[self.view backgroundColor]];  // Fix overlap problem for iPhone4 see-through problem
+    NIMLOG_AUTOSIZE(@"Background color: %@", [datePicker backgroundColor]);
     
     NSDate *savedDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"todayDate"];
     if(savedDate && [savedDate isEqualToDate:dateOnlyFromDate([NSDate date])]){

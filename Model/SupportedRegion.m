@@ -78,7 +78,7 @@
     CLLocation* centerLoc = [[CLLocation alloc] initWithLatitude:centerCoord.latitude longitude:centerCoord.longitude];
     CLLocation* upperRight = [[CLLocation alloc] initWithLatitude:upperRightLatitude.doubleValue longitude:upperRightLongitude.doubleValue];
     CLLocationDistance distance = [centerLoc distanceFromLocation:upperRight];
-    CLRegion* clRegion = [[CLRegion alloc] initCircularRegionWithCenter:centerCoord radius:distance identifier:@"Supported Region"];
+    CLRegion* clRegion = [[CLCircularRegion alloc] initWithCenter:centerCoord radius:distance identifier:@"Supported Region"];
     return clRegion;
 }
 

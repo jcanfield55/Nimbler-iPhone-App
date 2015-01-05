@@ -117,7 +117,7 @@ NSUserDefaults *prefs;
             [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
             lblNavigationTitle.text=ROUTE_DETAIL_VIEW_TITLE;
             lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-            [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+            [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
             lblNavigationTitle.backgroundColor =[UIColor clearColor];
             lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
             self.navigationItem.titleView=lblNavigationTitle;
@@ -365,6 +365,7 @@ NSUserDefaults *prefs;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
+    routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     @try {
         int mostRecentCellWidth = cell.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
@@ -413,9 +414,6 @@ NSUserDefaults *prefs;
         
         // if this is the selected row, make red
         
-        if (routeDetailsTableCellWidth <= 0) { // should not happen
-            routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
-        }
         NIMLOG_AUTOSIZE(@"Cell Row #%d: Width = %d", [indexPath row], routeDetailsTableCellWidth);
         NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         CGRect attributedLabelRect = [textString

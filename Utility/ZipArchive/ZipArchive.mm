@@ -65,7 +65,8 @@
 	zip_fileinfo zipInfo = {0};
 //	zipInfo.dosDate = (unsigned long) current;
 	
-	NSDictionary* attr = [[NSFileManager defaultManager] fileAttributesAtPath:file traverseLink:YES];
+    NSError *error;
+    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:file error:&error];
 	if( attr )
 	{
 		NSDate* fileDate = (NSDate*)[attr objectForKey:NSFileModificationDate];

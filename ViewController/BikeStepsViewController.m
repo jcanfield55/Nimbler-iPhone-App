@@ -47,7 +47,7 @@
             [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
             lblNavigationTitle.text=BIKE_STEPS_VIEW_TITLE;
             lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-            [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+            [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
             lblNavigationTitle.backgroundColor =[UIColor clearColor];
             lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
             self.navigationItem.titleView=lblNavigationTitle;

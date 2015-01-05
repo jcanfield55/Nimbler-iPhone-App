@@ -13,7 +13,10 @@
 #import "FeedBackForm.h"
 
 @interface UberDetailViewController ()
-
+{
+    NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
+    int uberDetailsTableCellWidth;
+}
 @end
 
 @implementation UberDetailViewController
@@ -58,12 +61,14 @@ UIImage* imageDetailDisclosure;
         [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
         lblNavigationTitle.text=UBER_DETAILS_VIEW_TITLE;
         lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-        [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+        [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
         lblNavigationTitle.backgroundColor =[UIColor clearColor];
         lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
         self.navigationItem.titleView=lblNavigationTitle;
         
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        drawingContext = [[NSStringDrawingContext alloc] init];
+        drawingContext.minimumScaleFactor = 0.0;  // Specifies no scaling
     }
     return self;
 }
@@ -92,8 +97,9 @@ UIImage* imageDetailDisclosure;
 {
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"UberDetailViewCell"];
-    
-    if (!cell) {
+    uberDetailsTableCellWidth = tableView.frame.size.width - UBER_DETAILS_TABLE_CELL_TEXT_BORDER;
+    int mostRecentCellWidth = cell.frame.size.width - UBER_DETAILS_TABLE_CELL_TEXT_BORDER;
+    if (!cell || mostRecentCellWidth != uberDetailsTableCellWidth) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:@"UberDetailViewCell"];
         [cell.imageView setImage:nil];
@@ -138,6 +144,7 @@ UIImage* imageDetailDisclosure;
 #pragma mark - UIDynamic cell heght methods
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    uberDetailsTableCellWidth = tableView.frame.size.width - UBER_DETAILS_TABLE_CELL_TEXT_BORDER;
     LegFromUber* uberLeg = [uberItin.uberSortedLegs objectAtIndex:[indexPath row]];  // Get the uberLeg for this cell
     NSString *titleText = uberLeg.uberDisplayName;
     
@@ -152,13 +159,18 @@ UIImage* imageDetailDisclosure;
         [pricelabel appendString:@" (surge)"];
     }
 
-    CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
-                             constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+    CGRect titleRect = [titleText
+                        boundingRectWithSize:CGSizeMake(uberDetailsTableCellWidth, CGFLOAT_MAX)
+                        options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                        attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_BOLD_FONT] forKey:NSFontAttributeName]
+                        context:drawingContext];
+    CGRect subtitleRect = [pricelabel
+                        boundingRectWithSize:CGSizeMake(uberDetailsTableCellWidth, CGFLOAT_MAX)
+                        options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                        attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_FONT] forKey:NSFontAttributeName]
+                        context:drawingContext];
     
-    CGSize subtitleSize = [pricelabel sizeWithFont:[UIFont MEDIUM_FONT]
-                                   constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-    
-    CGFloat height = titleSize.height + subtitleSize.height + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+    CGFloat height = ceil(titleRect.size.height) + ceil(subtitleRect.size.height) + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
     if (height < ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
         height = ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
     }

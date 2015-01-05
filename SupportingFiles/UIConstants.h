@@ -35,6 +35,8 @@
 #define TOFROM_MAIN_TABLE_HEIGHT 366
 #define TOFROM_MAIN_TABLE_HEIGHT_4INCH 499
 #define TOFROM_ROW_HEIGHT 36
+#define TOFROM_TEXTVIEW_SCROLL_HEIGHT_THRESHOLD 24
+#define TOFROM_TEXTVIEW_SCROLL_MULTILINE_OFFSET 8
 
 // DatePicker constants (in ToFromViewController)
 #define DATE_PICKER_HEIGHT 216
@@ -79,16 +81,27 @@
 #define BADGE_COUNT_ZERO 0
 
 // RouteOptionsViewController
-#define ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH 280
+#define ROUTE_OPTIONS_TABLE_CELL_TEXT_BORDER 42  // Amount to subtract from the cell width to determine width for wrapping multi-line text
 #define EXCLUDE_BUTTON_HEIGHT 38
 #define EXCLUDE_BUTTON_WIDTH 72
 #define EXCLUDE_BUTTONS_PER_ROW 4
+
+// UberDetailViewController
+#define UBER_DETAILS_TABLE_CELL_TEXT_BORDER 42  // Amount to subtract from the cell width to determine width for wrapping multi-line text
 
 // RouteDetailsViewController
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER 47 // Amount to subtract from the cell width to determine the width for wrapping multi-line text.  Obtained thru trial & error.
 #define ROUTE_DETAILS_CELL_TEXT_START_X 40
 #define ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT 90  // Minimum margin on the bottom for route table and feedback button
 #define ROUTE_DETAILS_MINIMUM_MAP_HEIGHT 40
+
+// TwitterViewController
+#define TWITTER_TABLE_CELL_TEXT_BORDER 80  // Amount to subtract from the cell width to determine the width for wrapping multi-line text.
+#define TWITTER_TABLE_CELL_HEIGHT_BUFFER 40  
+
+// LocationPickerView
+#define LOCATION_TABLE_CELL_TEXT_BORDER 20  // Amount to subtract from the cell width to determine the width for wrapping multi-line text.
+
 
 // LegMapViewController
 #define MAP_ALPHA_LIGHT 0.7
@@ -177,6 +190,7 @@
 #define MEDIUM_FONT fontWithName:@"Helvetica" size:14.0
 #define MEDIUM_BOLD_FONT fontWithName:@"Helvetica-Bold" size:14.0
 #define MEDIUM_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:14.0
+#define MEDIUM_LARGE_FONT fontWithName:@"Helvetica" size:15.0
 #define MEDIUM_LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:15.0
 #define SMALL_FONT fontWithName:@"Helvetica-Bold" size:13.0
 #define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13

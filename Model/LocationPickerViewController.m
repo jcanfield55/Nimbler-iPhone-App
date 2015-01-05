@@ -15,6 +15,7 @@
 @interface LocationPickerViewController ()
 {
     BOOL locationPicked;  // True if a location is picked before returning to ToFromViewController
+    NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
 }
 @end
 
@@ -31,6 +32,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         //[[self navigationItem] setTitle:@"Pick a location"];
+        drawingContext = [[NSStringDrawingContext alloc] init];
+        drawingContext.minimumScaleFactor = 0.0;  // Specifies no scaling
     }
     return self;
 }
@@ -160,6 +163,7 @@
 #pragma mark - UIDynamic cell heght methods
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellText;
+    int locationTableCellWidth = tableView.frame.size.width - LOCATION_TABLE_CELL_TEXT_BORDER;
     id tempObject = [locationArray objectAtIndex:[indexPath row]];
     if([tempObject isKindOfClass:[Location class]]){
         Location *loc = (Location *)tempObject;
@@ -181,11 +185,12 @@
         }
  
     }
-    CGSize size = [cellText 
-                sizeWithFont:[UIFont systemFontOfSize:MEDIUM_LARGE_FONT_SIZE] 
-                constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
-    
-    CGFloat height = size.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+    CGRect stringRect = [cellText
+                           boundingRectWithSize:CGSizeMake(locationTableCellWidth, CGFLOAT_MAX)
+                           options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                           attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_LARGE_FONT] forKey:NSFontAttributeName]
+                           context:drawingContext];
+    CGFloat height = ceil(stringRect.size.height) + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
     if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
         height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
     }
@@ -240,7 +245,7 @@
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.text = LOCATION_PICKER_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     self.navigationItem.titleView=lblNavigationTitle;

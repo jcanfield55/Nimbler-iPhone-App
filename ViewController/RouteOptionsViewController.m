@@ -32,6 +32,7 @@
     // Variables for internal use
     BOOL setWarningHidden; // True if we should set the warning to be hidden upon viewWillAppear
     NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
+    int routeOptionsTableCellWidth; // Dynamic width used for text wrapping
 }
 
 // Attributed strings are only supported on iOS6 or later, so do not call this method on < iOS6
@@ -70,7 +71,7 @@ UIImage *imageDetailDisclosure;
         [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
         lblNavigationTitle.text=ROUTE_OPTIONS_VIEW_TITLE;
         lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-        [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+        [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
         lblNavigationTitle.backgroundColor =[UIColor clearColor];
         lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
         self.navigationItem.titleView=lblNavigationTitle;
@@ -451,10 +452,12 @@ UIImage *imageDetailDisclosure;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
+    routeOptionsTableCellWidth = tableView.frame.size.width - ROUTE_OPTIONS_TABLE_CELL_TEXT_BORDER;
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"UIRouteOptionsViewCell"];
     @try {
-        if (!cell) {
+        int mostRecentCellWidth = cell.frame.size.width - ROUTE_OPTIONS_TABLE_CELL_TEXT_BORDER;
+        if (!cell || mostRecentCellWidth != routeOptionsTableCellWidth) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                           reuseIdentifier:@"UIRouteOptionsViewCell"];
             [cell.imageView setImage:nil];
@@ -580,13 +583,13 @@ UIImage *imageDetailDisclosure;
         // DE-228 Fixed
         // Applied The color only if the ios version is 6.0 or greater.
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
-            NSString *strDetailtextLabel = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+            NSString *strDetailtextLabel = [itin itinerarySummaryStringForWidth:routeOptionsTableCellWidth
                                                                            Font:cell.detailTextLabel.font];
             NSMutableAttributedString *strMutableDetailTextLabel = [self detailTextLabelColor:strDetailtextLabel itinerary:itin];
             [cell detailTextLabel].attributedText = strMutableDetailTextLabel;
         }
         else{
-            cell.detailTextLabel.text = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+            cell.detailTextLabel.text = [itin itinerarySummaryStringForWidth:routeOptionsTableCellWidth
                                                                         Font:cell.detailTextLabel.font];
         }
         [[cell detailTextLabel] setNumberOfLines:0]; // Allow for multi-lines
@@ -600,6 +603,7 @@ UIImage *imageDetailDisclosure;
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
+        routeOptionsTableCellWidth = aTableView.frame.size.width - ROUTE_OPTIONS_TABLE_CELL_TEXT_BORDER;
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
         NSString *titleText;
@@ -619,16 +623,16 @@ UIImage *imageDetailDisclosure;
                          superShortTimeStringForDate([itin startTimeOfFirstLeg]),
                          superShortTimeStringForDate([itin endTimeOfLastLeg]),
                          durationStr];
-            subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+            subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)routeOptionsTableCellWidth
                                                            Font:(UIFont *)[UIFont MEDIUM_FONT]];
         }
         CGRect titleRect = [titleText
-                                boundingRectWithSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)
+                                boundingRectWithSize:CGSizeMake(routeOptionsTableCellWidth, CGFLOAT_MAX)
                                 options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
                                 attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_BOLD_FONT] forKey:NSFontAttributeName]
                                 context:drawingContext];
         CGRect subtitleRect = [subtitleText
-                                boundingRectWithSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)
+                                boundingRectWithSize:CGSizeMake(routeOptionsTableCellWidth, CGFLOAT_MAX)
                                 options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
                                 attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_FONT] forKey:NSFontAttributeName]
                                 context:drawingContext];

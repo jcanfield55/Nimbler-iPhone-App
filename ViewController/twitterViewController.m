@@ -27,6 +27,14 @@
 #define CELL_HEIGHT             110
 #define REFRESH_HEADER_HEIGHT 52.0f
 
+@interface twitterViewController()
+{
+    // Variables for internal use
+    NSStringDrawingContext *drawingContext;  // Drawing context for attributed strings
+}
+@end
+
+
 @implementation twitterViewController
 UITableViewCell *cell;
 NSUserDefaults *prefs;
@@ -39,6 +47,8 @@ NSUserDefaults *prefs;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self != nil) {
         [self setupStrings];
+        drawingContext = [[NSStringDrawingContext alloc] init];
+        drawingContext.minimumScaleFactor = 0.0;  // Specifies no scaling
     }
     return self;
 }
@@ -85,7 +95,7 @@ NSUserDefaults *prefs;
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.text=TWITTER_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     self.navigationItem.titleView=lblNavigationTitle;              
@@ -277,8 +287,11 @@ NSUserDefaults *prefs;
     @try {
         NSString *cellIdentifier = TABLE_CELL;
         UILabel *labelTime;
+        int twitterTableCellWidth = tableView.frame.size.width - TWITTER_TABLE_CELL_TEXT_BORDER;
+        
         cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if(cell==nil){
+        int mostRecentCellWidth = cell.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
+        if (!cell || mostRecentCellWidth != twitterTableCellWidth) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
         }
         
@@ -300,12 +313,7 @@ NSUserDefaults *prefs;
             [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
             
             UILabel *lblTextLabel = [[UILabel alloc] init];
-            if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-               [lblTextLabel setFrame:CGRectMake(70, 10, 290, 30)];
-            }
-            else{
-               [lblTextLabel setFrame:CGRectMake(60, 10, 300, 30)];
-            }
+            [lblTextLabel setFrame:CGRectMake(70, 10, 290, 30)];
             [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
             [lblTextLabel setText:[tempArray objectAtIndex:0]];
             [lblTextLabel setTextColor:[UIColor whiteColor]];
@@ -320,17 +328,15 @@ NSUserDefaults *prefs;
                 }
                 [strTweet appendString:tweetText];
             }
-            CGSize stringSize;
-             UITextView *uiTextView=[[UITextView alloc] init];
-             if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(205, 9999) lineBreakMode:NSLineBreakByWordWrapping];
-                 [uiTextView setFrame:CGRectMake(70, 28, 220, stringSize.height + 40)];
-             }
-             else{
-                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:NSLineBreakByWordWrapping];
-                [uiTextView setFrame:CGRectMake(60, 28, 220, stringSize.height + 40)];
-             }
-            uiTextView.font = [UIFont systemFontOfSize:15.0];
+            UITextView *uiTextView=[[UITextView alloc] init];
+            
+            CGRect stringRect = [strTweet
+                                   boundingRectWithSize:CGSizeMake(twitterTableCellWidth, CGFLOAT_MAX)
+                                   options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                   attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_LARGE_FONT] forKey:NSFontAttributeName]
+                                   context:drawingContext];
+            [uiTextView setFrame:CGRectMake(70, 28, twitterTableCellWidth, ceil(stringRect.size.height) + TWITTER_TABLE_CELL_HEIGHT_BUFFER)];
+            uiTextView.font = [UIFont MEDIUM_LARGE_FONT];
             uiTextView.text = strTweet;
             uiTextView.textColor = [UIColor whiteColor];
             uiTextView.editable = NO;
@@ -384,18 +390,15 @@ NSUserDefaults *prefs;
         return 2;
     }
     else if([arrayTweet count] > indexPath.row/2){
+        int twitterTableCellWidth = aTableView.frame.size.width - TWITTER_TABLE_CELL_TEXT_BORDER;
         id key = [arrayTweet objectAtIndex:indexPath.row/2];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
-        UIFont *cellFont = [UIFont systemFontOfSize:16.0];
-        CGSize constraintSize;
-         if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-             constraintSize = CGSizeMake(205.0f, MAXFLOAT);
-         }
-         else{
-            constraintSize = CGSizeMake(220.0f, MAXFLOAT);
-         }
-        CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:NSLineBreakByWordWrapping];
-        return labelSize.height + 40;
+        CGRect labelRect = [tweetDetail
+                             boundingRectWithSize:CGSizeMake(twitterTableCellWidth, CGFLOAT_MAX)
+                             options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                             attributes:[NSDictionary dictionaryWithObject:[UIFont MEDIUM_LARGE_FONT] forKey:NSFontAttributeName]
+                             context:drawingContext];
+        return ceil(labelRect.size.height) + TWITTER_TABLE_CELL_HEIGHT_BUFFER;
     }
     return 50;
 }

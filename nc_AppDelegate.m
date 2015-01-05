@@ -1290,9 +1290,6 @@ FeedBackForm *fbView;
     isRemoteNotification = YES;
     [feedbackAlert1 dismissWithClickedButtonIndex:-1 animated:NO];
     @try {
-        for (id key in userInfo) {
-            NIMLOG_EVENT1(@"didReceiveRemoteNotification key: %@, value: %@", key, [userInfo objectForKey:key]);
-        }
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];

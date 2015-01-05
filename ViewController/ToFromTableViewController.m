@@ -568,7 +568,7 @@ NSString *strStreet2 = @"street ";
         }
         
     }
-    cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+    cell.textLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
     

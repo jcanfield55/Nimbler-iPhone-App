@@ -110,7 +110,7 @@ NSUserDefaults *prefs;
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.text=FEED_BACK_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     // [lblNavigationTitle setCenter:navBar.center];

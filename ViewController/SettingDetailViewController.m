@@ -129,7 +129,7 @@
     lblCurrentBikeDistance = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
     [lblCurrentBikeDistance setTextColor:[UIColor whiteColor]];
     [lblCurrentBikeDistance setBackgroundColor:[UIColor clearColor]];
-    [lblCurrentBikeDistance setTextAlignment:UITextAlignmentCenter];
+    [lblCurrentBikeDistance setTextAlignment:NSTextAlignmentCenter];
     [lblCurrentBikeDistance setFont:[UIFont MEDIUM_FONT]];
     
     lblMinBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_DISTANCE_LABEL_XPOS,BIKE_DISTANCE_LABEL_YPOS, BIKE_DISTANCE_LABEL_WIDTH, BIKE_DISTANCE_LABEL_HEIGHT)];
@@ -184,7 +184,7 @@
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     

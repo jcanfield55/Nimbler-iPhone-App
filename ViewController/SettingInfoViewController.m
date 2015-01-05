@@ -162,7 +162,7 @@ UIImage *imageDetailDisclosure;
     lblCurrentMaxWalkDistance = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
     [lblCurrentMaxWalkDistance setTextColor:[UIColor whiteColor]];
     [lblCurrentMaxWalkDistance setBackgroundColor:[UIColor clearColor]];
-    [lblCurrentMaxWalkDistance setTextAlignment:UITextAlignmentCenter];
+    [lblCurrentMaxWalkDistance setTextAlignment:NSTextAlignmentCenter];
     [lblCurrentMaxWalkDistance setFont:[UIFont MEDIUM_FONT]];
     
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5) {
@@ -184,7 +184,7 @@ UIImage *imageDetailDisclosure;
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.text=SETTING_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
-    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    [lblNavigationTitle setTextAlignment:NSTextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     self.navigationItem.titleView=lblNavigationTitle;
@@ -192,7 +192,7 @@ UIImage *imageDetailDisclosure;
     lblSliderMaxWalkDistanceValue = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
     [lblSliderMaxWalkDistanceValue setTextColor:[UIColor redColor]];
     [lblSliderMaxWalkDistanceValue setBackgroundColor:[UIColor clearColor]];
-    [lblSliderMaxWalkDistanceValue setTextAlignment:UITextAlignmentCenter];
+    [lblSliderMaxWalkDistanceValue setTextAlignment:NSTextAlignmentCenter];
     [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
     
     [switchPushNotification setOn:userPrefs.pushEnable];
