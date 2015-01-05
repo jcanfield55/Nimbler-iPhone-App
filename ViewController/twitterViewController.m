@@ -11,7 +11,7 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
 #import "QuartzCore/QuartzCore.h"
-#import "WebView.h"
+#import "NMWebView.h"
 #import "SettingInfoViewController.h"
 #import "FeedBackForm.h"
 
@@ -637,15 +637,15 @@ NSUserDefaults *prefs;
 - (void)openUrl:(NSURL *)url {
     [self.navigationController.navigationBar setHidden:NO];
     UIViewController *webViewController = [[UIViewController alloc] init];
-    [webViewController.view addSubview:[WebView instance]];
+    [webViewController.view addSubview:[NMWebView instance]];
 
     if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
         webViewController.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    [[WebView instance] loadRequest:request];
-    [WebView instance].delegate = self;
+    [[NMWebView instance] loadRequest:request];
+    [NMWebView instance].delegate = self;
     [self hideTabBar];
     RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)[nc_AppDelegate sharedInstance].tabBarController;
     [rxCustomTabbar hideAllElements];

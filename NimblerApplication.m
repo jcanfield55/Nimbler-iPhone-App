@@ -11,8 +11,6 @@
 #import "twitterViewController.h"
 #import "RouteDetailsViewController.h"
 
-#import "WebView.h"
-
 @implementation NimblerApplication
 
 // Open the custom Webview in case we click on advisories links.

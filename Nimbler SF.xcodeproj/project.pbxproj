@@ -18,7 +18,7 @@
 		2E1F619917AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
 		2E1F619A17AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
 		2E1F619B17AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
-		5202D1E519C2BA6100A800EC /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
+		5202D1E519C2BA6100A800EC /* NMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* NMWebView.m */; };
 		5202D1E919C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
 		5202D1EA19C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
 		5202D1EB19C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
@@ -190,10 +190,6 @@
 		52247D6A19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */; };
 		52247D6B19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */; };
 		5224EA701937199700AE67C7 /* Icon-Portland-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */; };
-		5224EA7219371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
-		5224EA7319371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
-		5224EA7419371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
-		5224EA7519371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
 		52276F1B1A4E5430002DCE6A /* FeedBackFormPopUpDislikes-archive.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52276F1A1A4E5430002DCE6A /* FeedBackFormPopUpDislikes-archive.xib */; };
 		52276F1D1A50D507002DCE6A /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52276F1C1A50D507002DCE6A /* FeedBackFormPopUp.xib */; };
 		52276F1E1A50D507002DCE6A /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52276F1C1A50D507002DCE6A /* FeedBackFormPopUp.xib */; };
@@ -271,6 +267,10 @@
 		5286391519D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
 		5286391619D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
 		5286391719D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
+		528BB9F21A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 528BB9F11A5A6DBE006414D6 /* libFlurry_6.0.0.a */; };
+		528BB9F31A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 528BB9F11A5A6DBE006414D6 /* libFlurry_6.0.0.a */; };
+		528BB9F41A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 528BB9F11A5A6DBE006414D6 /* libFlurry_6.0.0.a */; };
+		528BB9F51A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 528BB9F11A5A6DBE006414D6 /* libFlurry_6.0.0.a */; };
 		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
@@ -732,7 +732,7 @@
 		8DA77FCD1724FF0D0090C2EA /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DA77FCE1724FF0D0090C2EA /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DA77FCF1724FF0D0090C2EA /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
-		8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
+		8DA77FD01724FF0D0090C2EA /* NMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* NMWebView.m */; };
 		8DA77FD21724FF0D0090C2EA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8DA77FD31724FF0D0090C2EA /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DA77FD41724FF0D0090C2EA /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -982,7 +982,7 @@
 		8DAA2896178BDFEF00C3FA30 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8DAA2897178BDFEF00C3FA30 /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DAA2898178BDFEF00C3FA30 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
-		8DAA289A178BDFEF00C3FA30 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
+		8DAA289A178BDFEF00C3FA30 /* NMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* NMWebView.m */; };
 		8DAA289B178BDFEF00C3FA30 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
 		8DAA289E178BDFEF00C3FA30 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEAC1951778469600D7997C /* CoreText.framework */; };
@@ -1248,7 +1248,7 @@
 		8DE18B851725415800AA8112 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
-		8DE18B891725415800AA8112 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
+		8DE18B891725415800AA8112 /* NMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* NMWebView.m */; };
 		8DE18B8B1725415800AA8112 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8DE18B8C1725415800AA8112 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DE18B8D1725415800AA8112 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -1787,7 +1787,6 @@
 		52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-iPhone6.png"; sourceTree = "<group>"; };
 		52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-iPhone6plus.png"; sourceTree = "<group>"; };
 		5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland-80@2x.png"; sourceTree = "<group>"; };
-		5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.0.0.a; sourceTree = "<group>"; };
 		52276F1A1A4E5430002DCE6A /* FeedBackFormPopUpDislikes-archive.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "FeedBackFormPopUpDislikes-archive.xib"; sourceTree = "<group>"; };
 		52276F1C1A50D507002DCE6A /* FeedBackFormPopUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackFormPopUp.xib; sourceTree = "<group>"; };
 		52276F261A50DF0D002DCE6A /* FeedBackFormPopUpDislikes.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackFormPopUpDislikes.xib; sourceTree = "<group>"; };
@@ -1825,6 +1824,8 @@
 		525EC1C0170006B6009ACE5A /* MutableBoolean.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutableBoolean.m; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5286391319D3C842001232CA /* ToFromTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromTableViewController.xib; sourceTree = "<group>"; };
+		528BB9F01A5A6DBE006414D6 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		528BB9F11A5A6DBE006414D6 /* libFlurry_6.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_6.0.0.a; sourceTree = "<group>"; };
 		528C664C16D7011E005B7309 /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
 		528C664D16D7011E005B7309 /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RouteExcludeSetting.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52958AAF16CED86900CC46C7 /* GtfsTempItinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTempItinerary.h; path = Model/GtfsTempItinerary.h; sourceTree = SOURCE_ROOT; };
@@ -1964,7 +1965,6 @@
 		8D178A9317A9482100BF873F /* img_walkActiveMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walkActiveMode.png; sourceTree = "<group>"; };
 		8D178A9417A9482300BF873F /* img_walkMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walkMode.png; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
-		8D26425A17C714DF008551FE /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		8D317A3C16DB9A5A00581224 /* img_bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycle.png; sourceTree = "<group>"; };
 		8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycleSelect.png; sourceTree = "<group>"; };
 		8D361EC117B8FA6900246A55 /* feedBackLink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = feedBackLink.png; sourceTree = "<group>"; };
@@ -2007,8 +2007,8 @@
 		8D7BE0A916D6187A0038FF26 /* pressed1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pressed1.png; sourceTree = "<group>"; };
 		8D8B10CB1720268B0093E110 /* NimblerApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimblerApplication.h; sourceTree = SOURCE_ROOT; };
 		8D8B10CC1720268B0093E110 /* NimblerApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NimblerApplication.m; sourceTree = SOURCE_ROOT; };
-		8D8B10CE172026970093E110 /* WebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebView.h; sourceTree = "<group>"; };
-		8D8B10CF172026970093E110 /* WebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebView.m; sourceTree = "<group>"; };
+		8D8B10CE172026970093E110 /* NMWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMWebView.h; sourceTree = "<group>"; };
+		8D8B10CF172026970093E110 /* NMWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMWebView.m; sourceTree = "<group>"; };
 		8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station-background.json"; sourceTree = "<group>"; };
 		8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station-background.json"; sourceTree = "<group>"; };
 		8D93604A162FFC4500084E8E /* Icon_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_ipad.png; sourceTree = "<group>"; };
@@ -2135,12 +2135,12 @@
 				525442C814C3ED57004B0E1F /* Security.framework in Frameworks */,
 				525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */,
 				525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */,
-				5224EA7219371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */,
 				52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */,
 				52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */,
 				52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */,
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
+				528BB9F21A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */,
 				5258A89F160D617800871875 /* libTestFlight.a in Frameworks */,
 				8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */,
 			);
@@ -2181,12 +2181,12 @@
 				8DA77FE11724FF0D0090C2EA /* MobileCoreServices.framework in Frameworks */,
 				8DA77FE21724FF0D0090C2EA /* CFNetwork.framework in Frameworks */,
 				8DA77FE31724FF0D0090C2EA /* libRestKit.a in Frameworks */,
-				5224EA7319371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				8DA77FE41724FF0D0090C2EA /* UIKit.framework in Frameworks */,
 				8DA77FE51724FF0D0090C2EA /* Foundation.framework in Frameworks */,
 				8DA77FE61724FF0D0090C2EA /* CoreGraphics.framework in Frameworks */,
 				8DA77FE71724FF0D0090C2EA /* CoreData.framework in Frameworks */,
 				8DA77FE81724FF0D0090C2EA /* libTestFlight.a in Frameworks */,
+				528BB9F31A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */,
 				8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */,
 				8DEAC1971778469900D7997C /* CoreText.framework in Frameworks */,
 			);
@@ -2198,6 +2198,7 @@
 			files = (
 				8DAA289E178BDFEF00C3FA30 /* CoreText.framework in Frameworks */,
 				8DAA289F178BDFEF00C3FA30 /* MapKit.framework in Frameworks */,
+				528BB9F51A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */,
 				8DAA28A0178BDFEF00C3FA30 /* libsqlite3.0.dylib in Frameworks */,
 				8DAA28A1178BDFEF00C3FA30 /* Accounts.framework in Frameworks */,
 				8DAA28A3178BDFEF00C3FA30 /* Social.framework in Frameworks */,
@@ -2215,7 +2216,6 @@
 				8DAA28B0178BDFEF00C3FA30 /* libRestKit.a in Frameworks */,
 				8DAA28B1178BDFEF00C3FA30 /* UIKit.framework in Frameworks */,
 				8DAA28B2178BDFEF00C3FA30 /* Foundation.framework in Frameworks */,
-				5224EA7519371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				8DAA28B3178BDFEF00C3FA30 /* CoreGraphics.framework in Frameworks */,
 				8DAA28B4178BDFEF00C3FA30 /* CoreData.framework in Frameworks */,
 				8DAA28B5178BDFEF00C3FA30 /* libTestFlight.a in Frameworks */,
@@ -2243,12 +2243,12 @@
 				8DE18B9A1725415800AA8112 /* MobileCoreServices.framework in Frameworks */,
 				8DE18B9B1725415800AA8112 /* CFNetwork.framework in Frameworks */,
 				8DE18B9C1725415800AA8112 /* libRestKit.a in Frameworks */,
-				5224EA7419371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				8DE18B9D1725415800AA8112 /* UIKit.framework in Frameworks */,
 				8DE18B9E1725415800AA8112 /* Foundation.framework in Frameworks */,
 				8DE18B9F1725415800AA8112 /* CoreGraphics.framework in Frameworks */,
 				8DE18BA01725415800AA8112 /* CoreData.framework in Frameworks */,
 				8DE18BA11725415800AA8112 /* libTestFlight.a in Frameworks */,
+				528BB9F41A5A6DBE006414D6 /* libFlurry_6.0.0.a in Frameworks */,
 				8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */,
 				8DEAC1981778469900D7997C /* CoreText.framework in Frameworks */,
 			);
@@ -2260,8 +2260,8 @@
 		520FB107162603090083F143 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				8D8B10CE172026970093E110 /* WebView.h */,
-				8D8B10CF172026970093E110 /* WebView.m */,
+				8D8B10CE172026970093E110 /* NMWebView.h */,
+				8D8B10CF172026970093E110 /* NMWebView.m */,
 				520FB1681626036C0083F143 /* LocationPickerViewController.h */,
 				520FB1691626036C0083F143 /* LocationPickerViewController.m */,
 				520FB16A1626036C0083F143 /* LocationPickerViewController.xib */,
@@ -2857,8 +2857,8 @@
 		8D26425917C714DF008551FE /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
-				8D26425A17C714DF008551FE /* Flurry.h */,
-				5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */,
+				528BB9F01A5A6DBE006414D6 /* Flurry.h */,
+				528BB9F11A5A6DBE006414D6 /* libFlurry_6.0.0.a */,
 			);
 			path = Flurry;
 			sourceTree = "<group>";
@@ -4358,7 +4358,7 @@
 				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
-				5202D1E519C2BA6100A800EC /* WebView.m in Sources */,
+				5202D1E519C2BA6100A800EC /* NMWebView.m in Sources */,
 				8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */,
 				52D9667C19A71873004CD555 /* UberMgr.m in Sources */,
 				8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */,
@@ -4469,7 +4469,7 @@
 				8DA77FCE1724FF0D0090C2EA /* nc_AppDelegate.m in Sources */,
 				52D9667E19A71873004CD555 /* UberMgr.m in Sources */,
 				8DA77FCF1724FF0D0090C2EA /* NimblerApplication.m in Sources */,
-				8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */,
+				8DA77FD01724FF0D0090C2EA /* NMWebView.m in Sources */,
 				2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDB31793C39500C1BDCF /* RevealController.m in Sources */,
@@ -4557,7 +4557,7 @@
 				8DAA2897178BDFEF00C3FA30 /* MutableBoolean.m in Sources */,
 				8DAA2898178BDFEF00C3FA30 /* nc_AppDelegate.m in Sources */,
 				52D9668019A71873004CD555 /* UberMgr.m in Sources */,
-				8DAA289A178BDFEF00C3FA30 /* WebView.m in Sources */,
+				8DAA289A178BDFEF00C3FA30 /* NMWebView.m in Sources */,
 				8DAA289B178BDFEF00C3FA30 /* LocationFromLocalSearch.m in Sources */,
 				8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */,
 				8DABCDB41793C39600C1BDCF /* RevealController.m in Sources */,
@@ -4644,7 +4644,7 @@
 				8DE18B851725415800AA8112 /* IntermediateStops.m in Sources */,
 				8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */,
 				8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */,
-				8DE18B891725415800AA8112 /* WebView.m in Sources */,
+				8DE18B891725415800AA8112 /* NMWebView.m in Sources */,
 				52D9667F19A71873004CD555 /* UberMgr.m in Sources */,
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */,

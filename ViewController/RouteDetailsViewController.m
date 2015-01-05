@@ -18,7 +18,7 @@
 #import "nc_AppDelegate.h"
 #import "RealTimeManager.h"
 #import "KeyObjectStore.h"
-#import "WebView.h"
+#import "NMWebView.h"
 #import "BikeStepsViewController.h"
 #import "TEXTConstant.h"
 
@@ -665,7 +665,7 @@ NSUserDefaults *prefs;
     @try {
         for (UITouch *touch in [event allTouches]) {
             CGPoint point = [touch locationInView:self.view];
-            NIMLOG_UBER(@"Touch Events: %d, Point (%f, %f)", [[event allTouches] count], point.x, point.y);
+            NIMLOG_AUTOSIZE(@"Touch Events: %d, Point (%f, %f)", [[event allTouches] count], point.x, point.y);
             int y = point.y - (handleControl.frame.size.height/2);  // Adjust so finger is positioned at middle of handle
             if (y > self.view.frame.size.height - ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT) {
                 y = self.view.frame.size.height - ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT;
@@ -728,15 +728,15 @@ NSUserDefaults *prefs;
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
-    [webViewController.view addSubview:[WebView instance]];
+    [webViewController.view addSubview:[NMWebView instance]];
     
     if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
         webViewController.edgesForExtendedLayout = UIRectEdgeNone;
     }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    [[WebView instance] loadRequest:request];
-    [[WebView instance] setScalesPageToFit:YES];
-    [WebView instance].delegate = self;
+    [[NMWebView instance] loadRequest:request];
+    [[NMWebView instance] setScalesPageToFit:YES];
+    [NMWebView instance].delegate = self;
     [[self navigationController] pushViewController:webViewController animated:YES];
 }
 

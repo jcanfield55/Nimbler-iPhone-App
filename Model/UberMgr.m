@@ -174,6 +174,11 @@
                 for (PlanRequestParameters* planReqParams in queueEntry.planRequestParamArray) {
                     planReqParams.itinFromUberArray = [NSArray arrayWithObject:queueEntry.itinerary];
                 }
+                logEvent(FLURRY_UBER_ITINERARY,
+                         FLURRY_UBER_PRICE, queueEntry.itinerary.uberPriceEstimate,
+                         FLURRY_UBER_MINUTES,
+                         [NSString stringWithFormat:@"%f",ceil(queueEntry.itinerary.uberTimeEstimateSeconds.intValue / 60.0)],
+                         nil, nil, nil, nil);
             }
         }
         else {
@@ -221,7 +226,12 @@
         if (plan.fromLocation.nickName) {
             [paramDictionary setObject:plan.toLocation.nickName forKey:UBER_APP_DROPOFF_NICKNAME];
         }
-        
+        logEvent(FLURRY_UBER_APP_CALLED,
+                 FLURRY_UBER_PRICE, legFromUber.uberPriceEstimate,
+                 FLURRY_UBER_MINUTES,
+                 [NSString stringWithFormat:@"%f",ceil(legFromUber.uberTimeEstimateSeconds.intValue / 60.0)],
+                 FLURRY_UBER_SERVICE, legFromUber.uberDisplayName,
+                 nil, nil);
         NSString *uberAppURLString = [UBER_APP_BASE_URL appendQueryParams:paramDictionary];
         NSURL *uberAppURL = [NSURL URLWithString:uberAppURLString];
         NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];
@@ -243,6 +253,12 @@
         [paramDictionary setObject:@"US" forKey:UBER_WEB_COUNTRY_CODE];
         [paramDictionary setObject:UBER_CLIENT_ID forKey:UBER_WEB_CLIENT_ID_KEY];
         
+        logEvent(FLURRY_UBER_WEBSITE_CALLED,
+                 FLURRY_UBER_PRICE, legFromUber.uberPriceEstimate,
+                 FLURRY_UBER_MINUTES,
+                 [NSString stringWithFormat:@"%f",ceil(legFromUber.uberTimeEstimateSeconds.intValue / 60.0)],
+                 FLURRY_UBER_SERVICE, legFromUber.uberDisplayName,
+                 nil, nil);
         NSString *uberWebURLString = [UBER_WEB_BASE_URL appendQueryParams:paramDictionary];
         NSURL *uberWebURL = [NSURL URLWithString:uberWebURLString];
         NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];

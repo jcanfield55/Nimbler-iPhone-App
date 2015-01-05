@@ -14,7 +14,7 @@
 #import "PlanStore.h"
 
 @interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate,
-NewPlanAvailableDelegate, UIWebViewDelegate>
+NewPlanAvailableDelegate>
 
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) IBOutlet UILabel* noItineraryWarning;

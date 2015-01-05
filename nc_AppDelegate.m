@@ -449,7 +449,7 @@ FeedBackForm *fbView;
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         SettingInfoViewController *settingsView;
         FeedBackForm *feedbackView;
-        NIMLOG_UBER(@"Screen size %f x %f", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        NIMLOG_AUTOSIZE(@"Screen size %f x %f", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
         feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
@@ -1321,7 +1321,7 @@ FeedBackForm *fbView;
 
 -(void)alertView: (UIAlertView *)uiAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString* buttonResponse;
+    NSString* buttonResponse = nil;
     if (uiAlertView == feedbackAlert1) {  // if this is the likes / dislikes action sheet
         if(buttonIndex == 0){ // likes
             buttonResponse = @"Likes = Yes";
@@ -1348,7 +1348,7 @@ FeedBackForm *fbView;
     }
     else if (uiAlertView == feedbackAlert2Likes) {
         if(buttonIndex == 0){
-            buttonResponse = @"App Store feedback";
+            buttonResponse = @"Likes: App Store feedback";
             //Fixed DE-326
             NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
             NimblerApplication *sharedApp = (NimblerApplication *)[UIApplication sharedApplication];	
@@ -1357,14 +1357,14 @@ FeedBackForm *fbView;
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         else if(buttonIndex == 1){
-            buttonResponse = @"Remind me later";
+            buttonResponse = @"Likes: Remind me later";
             [[NSUserDefaults standardUserDefaults] setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_REMIND_ME_LATER_NUMBER
                                                        forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
             [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:DAYS_COUNT];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         else if(buttonIndex == 2){
-            buttonResponse = @"No thanks";
+            buttonResponse = @"Likes: No thanks";
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
@@ -1375,7 +1375,7 @@ FeedBackForm *fbView;
     }
     else if (uiAlertView == feedbackAlert2Dislikes) {
         if(buttonIndex == 0){
-            buttonResponse = @"Nimbler feedback";
+            buttonResponse = @"Dislikes: Nimbler feedback";
             FeedBackForm *feedBackForm;
             feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUpDislikes" bundle:nil];
             feedBackForm.isViewPresented = true;
@@ -1385,7 +1385,7 @@ FeedBackForm *fbView;
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         else if(buttonIndex == 1){
-            buttonResponse = @"No thanks";
+            buttonResponse = @"Dislikes: No thanks";
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
@@ -1400,8 +1400,9 @@ FeedBackForm *fbView;
             [self.tabBarController setSelectedIndex:1];
         }
     }
-    
-    logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
+    if (buttonResponse) {
+        logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
+    }
 }
 
 -(void)updateTime{

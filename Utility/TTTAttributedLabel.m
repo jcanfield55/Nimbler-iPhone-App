@@ -503,7 +503,7 @@ static inline NSAttributedString * NSAttributedStringBySettingColorFromContext(N
     
     CFArrayRef lines = CTFrameGetLines(frame);
     NSInteger numberOfLines = self.numberOfLines > 0 ? MIN(self.numberOfLines, CFArrayGetCount(lines)) : CFArrayGetCount(lines);
-    BOOL truncateLastLine = (self.lineBreakMode == UILineBreakModeHeadTruncation || self.lineBreakMode == UILineBreakModeMiddleTruncation || self.lineBreakMode == UILineBreakModeTailTruncation);
+    BOOL truncateLastLine = (self.lineBreakMode == NSLineBreakByTruncatingHead || self.lineBreakMode == NSLineBreakByTruncatingMiddle || self.lineBreakMode == NSLineBreakByTruncatingTail);
 	
     CGPoint lineOrigins[numberOfLines];
     CTFrameGetLineOrigins(frame, CFRangeMake(0, numberOfLines), lineOrigins);
@@ -521,22 +521,22 @@ static inline NSAttributedString * NSAttributedStringBySettingColorFromContext(N
                 // Get correct truncationType and attribute position
                 CTLineTruncationType truncationType;
                 NSUInteger truncationAttributePosition = lastLineRange.location;
-                UILineBreakMode lineBreakMode = self.lineBreakMode;
+                NSLineBreakMode lineBreakMode = self.lineBreakMode;
                 
                 // Multiple lines, only use UILineBreakModeTailTruncation
                 if (numberOfLines != 1) {
-                    lineBreakMode = UILineBreakModeTailTruncation;
+                    lineBreakMode = NSLineBreakByTruncatingTail;
                 }
                 
                 switch (lineBreakMode) {
-                    case UILineBreakModeHeadTruncation:
+                    case NSLineBreakByTruncatingHead:
                         truncationType = kCTLineTruncationStart;
                         break;
-                    case UILineBreakModeMiddleTruncation:
+                    case NSLineBreakByTruncatingMiddle:
                         truncationType = kCTLineTruncationMiddle;
                         truncationAttributePosition += (lastLineRange.length / 2);
                         break;
-                    case UILineBreakModeTailTruncation:
+                    case NSLineBreakByTruncatingTail:
                     default:
                         truncationType = kCTLineTruncationEnd;
                         truncationAttributePosition += (lastLineRange.length - 1);
@@ -577,13 +577,13 @@ static inline NSAttributedString * NSAttributedStringBySettingColorFromContext(N
                 // Adjust pen offset for flush depending on text alignment
                 CGFloat flushFactor = 0.0f;
                 switch (self.textAlignment) {
-                    case UITextAlignmentCenter:
+                    case NSTextAlignmentCenter:
                         flushFactor = 0.5f;
                         break;
-                    case UITextAlignmentRight:
+                    case NSTextAlignmentRight:
                         flushFactor = 1.0f;
                         break;
-                    case UITextAlignmentLeft:
+                    case NSTextAlignmentLeft:
                     default:
                         break;
                 }

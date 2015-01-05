@@ -142,7 +142,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 #define IS_KICKFOLIO 0
 
 // Flurry events
@@ -181,10 +181,13 @@
 #define FLURRY_ROUTE_OPTIONS_APPEAR @"RouteOptions appear"
 #define FLURRY_UBER_NO_NETWORK @"No network connection for Uber API"
 #define FLURRY_UBER_OTHER_ERROR @"RK Error when retrieving Uber"
+#define FLURRY_UBER_ITINERARY @"Uber itinerary"
 #define FLURRY_EXCLUDE_SETTING_CHANGED @"ExcludeSetting changed"
 #define FLURRY_ROUTE_SELECTED @"Route selected"
 #define FLURRY_ROUTE_DETAILS_APPEAR @"RouteDetails appear"
 #define FLURRY_UBER_DETAILS_APPEAR @"UberDetails appear"
+#define FLURRY_UBER_APP_CALLED @"Uber App called"
+#define FLURRY_UBER_WEBSITE_CALLED @"Uber Website called"
 #define FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER @"RouteDetails NewItinerary #"
 #define FLURRY_SETTINGS_APPEAR @"Settings appear"
 #define FLURRY_SETTINGS_SUBMITTED1 @"Settings submitted"
@@ -228,6 +231,9 @@
 #define FLURRY_SETTING_ALERT_SOUNDS @"(Alert sounds)"
 #define FLURRY_SETTING_ALERT_HOURS @"(Alert hours)"
 #define FLURRY_SETTING_ADVISORY_STREAMS @"(Advisory streams)"
+#define FLURRY_UBER_PRICE @"(Uber Price)"
+#define FLURRY_UBER_MINUTES @"(Uber Minutes)"
+#define FLURRY_UBER_SERVICE @"(Uber Service)"
 #define FLURRY_LAT @"(Lat)"
 #define FLURRY_LNG @"(Lng)"
 #define FLURRY_SUPPORTED_REGION_STRING @"(Supported Region String)"
