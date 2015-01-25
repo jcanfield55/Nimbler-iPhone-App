@@ -90,8 +90,8 @@
 #define UBER_DETAILS_TABLE_CELL_TEXT_BORDER 42  // Amount to subtract from the cell width to determine width for wrapping multi-line text
 
 // RouteDetailsViewController
-#define ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER 47 // Amount to subtract from the cell width to determine the width for wrapping multi-line text.  Obtained thru trial & error.
-#define ROUTE_DETAILS_CELL_TEXT_START_X 40
+#define ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER 60 // Amount to subtract from the cell width to determine the width for wrapping multi-line text.  Obtained thru trial & error.
+#define ROUTE_DETAILS_CELL_TEXT_START_X 43
 #define ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT 90  // Minimum margin on the bottom for route table and feedback button
 #define ROUTE_DETAILS_MINIMUM_MAP_HEIGHT 40
 
