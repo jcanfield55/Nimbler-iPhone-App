@@ -1444,7 +1444,6 @@ FeedBackForm *fbView;
         }
     int tweetConut =count;
     [twitterCount removeFromSuperview];
-    twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
     
     if([[[UIDevice currentDevice] systemVersion] intValue]>=    7){
