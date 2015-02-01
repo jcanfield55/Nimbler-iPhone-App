@@ -773,11 +773,17 @@ UIImage *imageDetailDisclosure;
 
 - (void)switchPushNotificationChanged{
     if(![[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] && switchPushNotification.on){
-        [[UIApplication sharedApplication]
-         registerForRemoteNotificationTypes:
-         (UIRemoteNotificationTypeAlert |
-          UIRemoteNotificationTypeBadge |
-          UIRemoteNotificationTypeSound)];
+        if ([[[UIDevice currentDevice] systemVersion] intValue]>=8){
+            UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeBadge | UIUserNotificationTypeAlert;
+            [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:types categories:nil]];
+        }
+        else {
+            [[UIApplication sharedApplication]
+             registerForRemoteNotificationTypes:
+             (UIRemoteNotificationTypeAlert |
+              UIRemoteNotificationTypeBadge |
+              UIRemoteNotificationTypeSound)];
+        }
     }
     [UserPreferance userPreferance].pushEnable = switchPushNotification.on; // Save setting
     [self.tblSetting reloadData];

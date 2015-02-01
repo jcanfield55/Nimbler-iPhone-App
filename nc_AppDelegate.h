@@ -123,7 +123,6 @@
 
 - (NSURL *)applicationDocumentsDirectory;
 
--(void)setUpTabViewController;   // sets up TabViewController & the child navigation controllers
 -(void)suppertedRegion;
 -(void)getTwiiterLiveData;
 +(nc_AppDelegate *)sharedInstance;

@@ -193,11 +193,17 @@ FeedBackForm *fbView;
     [self suppertedRegion];
     
     if ([[UserPreferance userPreferance] pushEnable]) {
-        [[UIApplication sharedApplication]
-         registerForRemoteNotificationTypes:
-         (UIRemoteNotificationTypeAlert |
-          UIRemoteNotificationTypeBadge |
-          UIRemoteNotificationTypeSound)];
+        if ([[[UIDevice currentDevice] systemVersion] intValue]>=8){
+            UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeBadge | UIUserNotificationTypeAlert;
+            [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:types categories:nil]];
+        }
+        else {
+            [[UIApplication sharedApplication]
+             registerForRemoteNotificationTypes:
+             (UIRemoteNotificationTypeAlert |
+              UIRemoteNotificationTypeBadge |
+              UIRemoteNotificationTypeSound)];
+        }
     }
     else{
         [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:0.0];
@@ -472,33 +478,6 @@ FeedBackForm *fbView;
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #2", @"", exception);
     }
     return YES;
-}
-
-- (void)setUpTabViewController
-{
-    /* JC 10/19/2014 - this appears to be only used by RealTimeServerStubTest.m */
-    /*
-     These is for navigation controller
-     
-     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-     [[self window] setRootViewController:navController];
-     
-     */
-    
-    // This is for TabBar controller
-    //[self.window makeKeyAndVisible];
-    self.tabBarController = [[RXCustomTabBar alloc] init];
-    settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
-    fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
-    twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-    
-    UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-    UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
-    UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
-    UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
-    
 }
 
 
@@ -1214,11 +1193,17 @@ FeedBackForm *fbView;
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 #if PREFS_DEFAULT_IS_PUSH_ENABLE
-    [[UIApplication sharedApplication]
-     registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeAlert |
-      UIRemoteNotificationTypeBadge |
-      UIRemoteNotificationTypeSound)];
+    if ([[[UIDevice currentDevice] systemVersion] intValue]>=8){
+        UIUserNotificationType types = UIUserNotificationTypeSound | UIUserNotificationTypeBadge | UIUserNotificationTypeAlert;
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:types categories:nil]];
+    }
+    else {
+        [[UIApplication sharedApplication]
+         registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeAlert |
+          UIRemoteNotificationTypeBadge |
+          UIRemoteNotificationTypeSound)];
+    }
 #endif
 }
 
@@ -1317,6 +1302,13 @@ FeedBackForm *fbView;
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->didReceiveRemoteNotification", @"", exception);
     }
+}
+
+// Callback for iOS 8.0 and later that tells what notification choices the user has authorized
+-(void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+    // Now that we registered the settings, register for remote notifications
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
 -(void)alertView: (UIAlertView *)uiAlertView clickedButtonAtIndex:(NSInteger)buttonIndex

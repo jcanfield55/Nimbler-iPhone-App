@@ -684,41 +684,14 @@ NSUserDefaults *prefs;
 
 - (void) hideTabBar {
     //[[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
-    /*
+    
     for(UIView *view in self.tabBarController.view.subviews)
     {
-        CGRect _rect = view.frame;
         if([view isKindOfClass:[UITabBar class]])
         {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 0;
-            }
-            else{
-                _rect.origin.y = 0;
-            }
-            [view setFrame:_rect];
+            [view setHidden:YES];    // JC 1/31/2015: set hidden extra gray UITabBar at bottom of screen
         }
-        else if([view isKindOfClass:[UIImageView class]]){
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 0;
-            }
-            else{
-                _rect.origin.y = 0;
-            }
-            [view setFrame:_rect];
-        }
-        else if(![view isKindOfClass:[UIButton class]]){
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.size.height = 568;
-            }
-            else{
-                _rect.size.height = 480;
-                
-            }
-            [view setFrame:_rect];
-            //[view setHidden:YES];
-        }
-    } */
+    }
 }
 
 @end

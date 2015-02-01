@@ -175,12 +175,12 @@
 	
 	if ([self.badgeText length]>0) 
 	{
-		[badgeTextColor set];
 		UIFont *textFont = [UIFont boldSystemFontOfSize:13];
 		CGSize textSize = [self.badgeText sizeWithAttributes:[NSDictionary dictionaryWithObject:textFont forKey:NSFontAttributeName]];
 		[self.badgeText drawAtPoint:CGPointMake((rect.size.width/2-textSize.width/2), (rect.size.height/2-textSize.height/2))
-                           withAttributes:[NSDictionary dictionaryWithObject:textFont forKey:NSFontAttributeName]];
-		
+                           withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                           textFont, NSFontAttributeName,
+                                           self.badgeTextColor, NSForegroundColorAttributeName, nil]];
 	}
 }
 

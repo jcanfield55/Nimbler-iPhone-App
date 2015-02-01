@@ -119,7 +119,6 @@
     
     // Set up tabViewController and make it visible
     [[nc_AppDelegate sharedInstance] setToFromViewController:toFromViewController];
-    [[nc_AppDelegate sharedInstance] setUpTabViewController];
     [nc_AppDelegate sharedInstance].window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [[[nc_AppDelegate sharedInstance] window] setRootViewController:[nc_AppDelegate sharedInstance].tabBarController];
     [[nc_AppDelegate sharedInstance].window makeKeyAndVisible];
